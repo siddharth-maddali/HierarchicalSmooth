@@ -1,0 +1,9 @@
+Untracked
+*.pdf	
+*.mex*	# Matlab/Octave compiled binaries
+*.o		# Compiled object files
+.*.swp	# Open file buffers in *nix systems
+*.m~	# Autosaved matlab scripts (*nix)
+*.asv	# Autosaved matlab scripts (Windows, iOS)
+*.exe	# Windows executables
+Smooth.Default.log
