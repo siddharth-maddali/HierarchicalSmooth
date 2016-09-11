@@ -35,7 +35,7 @@
 % bPointSmoothed - Returns the (new or modified) version of varargin{5}.
 %
 
-function [ xSmoothed ] = HeirarchicalSmooth( xPoints, tri, nFaceLabels, nNodeType, varargin )
+function [ xSmoothed ] = HierarchicalSmooth( xPoints, tri, nFaceLabels, nNodeType, varargin )
 
     warning( 'off', 'MATLAB:triangulation:PtsNotInTriWarnId' );
 
