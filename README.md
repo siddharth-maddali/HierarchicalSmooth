@@ -44,7 +44,7 @@ tri( f, : ) = [];
 
 * The final required input is the classification of the surface mesh nodes as belonging to surface interiors, triple lines or quad points. 
 ```Matlab
-ntype = load( 'NodeTypes.txt' );
+ntype = load( 'NodeType.txt' );
 ntype = ntype';
 ```
 
