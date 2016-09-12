@@ -11,11 +11,11 @@ trisub = tri( any( fl==GrainToPlot, 2 ), : );
 
 figure; 
 1 = subplot( 1, 2, 1 );
-trisurf( trisub, P(1,:), P(2,:), P(3,:) );
+trisurf( trisub, xdat(1,:), xdat(2,:), xdat(3,:) );
 axis equal; axis off; 
 
 s2 = subplot( 1, 2, 2 );
-trisurf( trisub, Q(1,:), Q(2,:), Q(3,:) );
+trisurf( trisub, xsmooth(1,:), xsmooth(2,:), xsmooth(3,:) );
 axis equal; axis off;
 
 linkprop( [ s1 s2 ], { ...
