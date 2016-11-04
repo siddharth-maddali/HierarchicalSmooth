@@ -3,14 +3,14 @@
 % grains in their smoothed and unsmoothed forms. 
 
 ngrains = unique( fl(:) );
-printf( 'Number of grains in volume = %d', numel( ngrains ) );
+sprintf( 'Number of grains in volume = %d', numel( ngrains ) )
 
 GrainToPlot = 271; % set this to one of the integers in 'ngrains'.
 
 trisub = tri( any( fl==GrainToPlot, 2 ), : );
 
 figure; 
-1 = subplot( 1, 2, 1 );
+s1 = subplot( 1, 2, 1 );
 trisurf( trisub, xdat(1,:), xdat(2,:), xdat(3,:) );
 axis equal; axis off; 
 
