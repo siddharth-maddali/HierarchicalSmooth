@@ -3,7 +3,7 @@
 % grains in their smoothed and unsmoothed forms. 
 
 ngrains = unique( fl(:) );
-sprintf( 'Number of grains in volume = %d', numel( ngrains ) )
+printf( 'Number of grains in volume = %d', numel( ngrains ) );
 
 GrainToPlot = 271; % set this to one of the integers in 'ngrains'.
 
