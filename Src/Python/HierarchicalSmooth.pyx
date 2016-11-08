@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.sparse import diags
 
 def FastChainLinkSort( FBIn ):
     FBOut = FBIn
@@ -8,3 +9,9 @@ def FastChainLinkSort( FBIn ):
         if FBOut[ i,1 ] == FBOut[ i-1,1 ]:
             FBOut[ i, [ 0, 1 ] ] = FBOut[ i, [ 1, 0 ] ]
     return FBOut
+
+def Laplacian2D( N ):
+    M = diags( [ np.ones( N-1 ) ], [ 1 ] ) - diags( [ np.ones( N ) ], [ 0 ] )
+    M = M.T * M
+    M[ -1, -1 ] = 1.
+    return M
