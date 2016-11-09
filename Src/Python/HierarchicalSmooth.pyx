@@ -1,5 +1,8 @@
 import numpy as np
 from scipy.sparse import diags
+import Base as base
+
+import Base as base
 
 def FastChainLinkSort( FBIn ):
     FBOut = FBIn
@@ -15,3 +18,21 @@ def Laplacian2D( N ):
     M = M.T * M
     M[ -1, -1 ] = 1.
     return M
+
+def GraphLaplacian( tri ):
+   nUniq = np.unique( tri )
+   nIdx = range( nUniq.size )
+   nSubTri = np.array( base.ismember( tri, nUniq )[1] ).reshape( -1, tri.shape[1] )
+   MLap = diags( [ np.zeros( nUniq.size ) ], [ 0 ] )
+   return MLap, nUniq
+    
+
+
+
+
+
+
+
+
+
+
