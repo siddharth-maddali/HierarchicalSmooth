@@ -33,7 +33,7 @@ def GraphLaplacian( tri ):
         MLap[ i, i ] = -MLap[i,:].sum()
     return MLap, nUniq
     
-    def Smooth( yIn, fThreshold, nMaxIterations, L=None, nFixed=None ):
+#    def Smooth( yIn, fThreshold, nMaxIterations, L=None, nFixed=None ):
         
 
 
