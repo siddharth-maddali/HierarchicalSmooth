@@ -6,4 +6,6 @@ Untracked
 *.m~	# Autosaved matlab scripts (*nix)
 *.asv	# Autosaved matlab scripts (Windows, iOS)
 *.exe	# Windows executables
+*.pyc	# Python bytecode files
+*.pyx	# Auto-generated Cython output files
 Smooth.Default.log
