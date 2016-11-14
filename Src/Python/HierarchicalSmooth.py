@@ -2,7 +2,7 @@ import numpy as np
 from scipy.sparse import diags, csc_matrix  # to create sparse diagonal matrices
 from scipy.sparse.linalg import spsolve     # to solve sparse systems of equations
 
-#import Base as base                         # custom module containing ismember, etc.
+import Base as base                         # custom module containing ismember, etc.
 import HierarchicalSmooth_PRIVATE as hspv   # private functions to make this code mode readable
 
 import copy                                 # to use deepcopy
@@ -71,6 +71,7 @@ def Smooth( yInArray, fThreshold, nMaxIterations, L=None, nFixed=None ):
 
     fObj1 = hspv._GetObjFn( fEps, fSmallEye, LRedTLRed, yIn, nMobile, LRedConst, D, AyIn )[0]
     fObj2 = hspv._GetObjFn( fEps+fThreshold, fSmallEye, LRedTLRed, yIn, nMobile, LRedConst, D, AyIn )[0]
+    IterData.append( [ fEps, fObj1 ] )
 
     fSlope = ( fObj2 - fObj1 ) / fThreshold
     while abs( fSlope ) > fThreshold and nIterations < nMaxIterations:
@@ -90,6 +91,19 @@ def Smooth( yInArray, fThreshold, nMaxIterations, L=None, nFixed=None ):
     if nIterations == nMaxIterations:
         sys.stderr.write( 'Smooth warning: Max. number of iterations reached.\n' )
     return yOut, IterData, nIterations
+
+def ExtractFace( triFull, SeedArray ):
+    nPrevSize = 0
+    triFace = triFull[ np.where( np.sum( base.ismember( triFull, SeedArray )[0], axis=1 ) > 1. )[0] , : ]
+    nNextSize = triFace.shape[0]
+    while nNextSize != nPrevSize:
+        nPrevSize = nNextSize
+        SeedArray = np.unique( triFace )
+        triFace = triFull[ np.where( np.sum( base.ismember( triFull, SeedArray )[0], axis=1 ) > 1. )[0] , : ]
+        nNextSize = triFace.shape[0]
+
+    return triFace
+
 
 
 
