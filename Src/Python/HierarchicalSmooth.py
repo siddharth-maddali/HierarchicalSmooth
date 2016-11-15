@@ -4,9 +4,11 @@ from scipy.sparse.linalg import spsolve     # to solve sparse systems of equatio
 
 import Base as base                         # custom module containing ismember, etc.
 import HierarchicalSmooth_PRIVATE as hspv   # private functions to make this code mode readable
+import Triangulation as triang              # bare-bones version of Matlab's triangulation object
 
 import copy                                 # to use deepcopy
 import sys                                  # to write to output streams
+
 
 def FastChainLinkSort( FBIn ):
     FBOut = FBIn
@@ -105,6 +107,9 @@ def ExtractFace( triFull, SeedArray ):
     return triFace
 
 
+def DifferentiateFaces( TriangIn ):
+    triThis = TriangIn.connectivityList()
+    FB = FastChainLinkSort( TriangIn.freeBoundary )
 
 
         
