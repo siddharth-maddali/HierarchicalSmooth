@@ -1,10 +1,10 @@
 Untracked
 *.pdf	
-*.mex*			# Matlab/Octave compiled binaries
-*.{a,{s,}o}		# Compiled object files and static/shared libraries
-.*.swp			# Open file buffers in *nix systems
-*.m~			# Autosaved matlab scripts (*nix)
-*.asv			# Autosaved matlab scripts (Windows, iOS)
-*.exe			# Windows executables
-*.pyc			# Python bytecode files
+*.mex*
+*.{a,{s,}o}
+.*.swp
+*.m~
+*.asv
+*.exe
+*.pyc
 Smooth.Default.log

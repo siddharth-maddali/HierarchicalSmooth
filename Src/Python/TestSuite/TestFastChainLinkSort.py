@@ -1,5 +1,9 @@
 import numpy as np
+
 import matplotlib.pyplot as plt
+from matplotlib import rc
+rc( 'text', usetex=True )
+
 from scipy.spatial import Delaunay
 import gc
 
@@ -7,7 +11,7 @@ import Triangulation as tr
 
 nInside = 20
 nOutside = 40
-nBetween = 100
+nBetween = 250
 
 th1 = np.linspace( 0, 2.*np.pi, nInside+1 )[:-1]
 th2 = np.linspace( 0, 2.*np.pi, nOutside+1 )[:-1]
@@ -34,10 +38,17 @@ FB = T.freeBoundary()
 
 ###############################################
 
+V = P[ :, FB[:,1] ] - P[ :, FB[:,0] ]
+
+plt.clf()
+
 plt.triplot( P[0], P[1], tri2, label='Complete triangulation' )
-plt.plot( P[0,FB[:,0]], P[1,FB[:,0]], '-r', linewidth=2, label='Free boundaries' )
+plt.quiver( P[ 0, FB[:,0] ], P[ 1, FB[:,0] ], V[0], V[1],label='Free boundaries' )
+
+plt.title( r'Test of routine \texttt{Triangulation.\_FastChainLinkSort}' )
 plt.axis( 'equal' )
 plt.legend( loc='best' )
+plt.grid( which='both' )
 plt.show()
 
 gc.collect()

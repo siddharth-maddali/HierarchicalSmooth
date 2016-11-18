@@ -29,7 +29,12 @@ def _FastChainLinkSort( fe, tri ):
     Key = str( MyDict[ Key ] )
     del MyDict[ OldKey ]
     while len( MyDict ) > 0:
-        Duplicates = [ i for i in MyDict.keys() if i.strip( '.' )==Key ]
+        Duplicates = []
+        TempKey = Key.strip( '.' )
+        while MyDict.has_key( TempKey ):
+            Duplicates.append( TempKey )
+            TempKey += '.'
+
         n = 0 
         if len( Duplicates ) > 1:
             TriangleWithThisEdge = set( [ list( i ) for i in tri if 
