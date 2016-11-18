@@ -10,15 +10,6 @@ import copy                                 # to use deepcopy
 import sys                                  # to write to output streams
 
 
-def FastChainLinkSort( FBIn ):
-    FBOut = FBIn
-    for i in range( 1, FBOut.shape[0] ):
-        f = np.where( np.any( FBOut[i:,:]==FBOut[i-1,1], axis=1 ) )[0]
-        FBOut[ [i] + [ i+j for j in f ] ] = FBOut[ [ i+j for j in f ] + [i] ] 
-        if FBOut[ i,1 ] == FBOut[ i-1,1 ]:
-            FBOut[ i, [ 0, 1 ] ] = FBOut[ i, [ 1, 0 ] ]
-    return FBOut
-
 def Laplacian2D( N ):
     M = diags( [ np.ones( N-1 ) ], [ 1 ] ) - diags( [ np.ones( N ) ], [ 0 ] )
     M = M.T * M
@@ -109,7 +100,9 @@ def ExtractFace( triFull, SeedArray ):
 
 def DifferentiateFaces( TriangIn ):
     triThis = TriangIn.connectivityList()
-    FB = FastChainLinkSort( TriangIn.freeBoundary )
+    FB = TriangIn.freeBoundary() 
+        # No need for chain-link sorting; this was already 
+        # done on the creation of the Triangulation object.
 
 
         
