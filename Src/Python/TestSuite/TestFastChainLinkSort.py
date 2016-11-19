@@ -43,7 +43,11 @@ V = P[ :, FB[:,1] ] - P[ :, FB[:,0] ]
 plt.clf()
 
 plt.triplot( P[0], P[1], tri2, label='Complete triangulation' )
-plt.quiver( P[ 0, FB[:,0] ], P[ 1, FB[:,0] ], V[0], V[1],label='Free boundaries' )
+plt.quiver( 
+    P[ 0, FB[:,0] ], P[ 1, FB[:,0] ], 
+    V[0], V[1],
+    units='xy',
+    label='Free boundaries' )
 
 plt.title( r'Test of routine \texttt{Triangulation.\_FastChainLinkSort}' )
 plt.axis( 'equal' )

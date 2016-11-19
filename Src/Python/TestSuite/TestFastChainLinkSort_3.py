@@ -9,25 +9,36 @@ import gc
 
 import Triangulation as tr
 
-#nPoints = 1000
-nRemovable = 1000
-fLeft = -1.
-fRight = 1.
-fPts = 60
-fNoise = 0.25
+nPerimeterPoints = 100
+nInteriorPoints = 2000
+nRemovable = 100
 
-mx, my = np.meshgrid( 
-        np.linspace( fLeft, fRight, fPts ), 
-        np.linspace( fLeft, fRight, fPts )
-        )
-P= np.concatenate( 
-        ( mx.reshape( 1, -1 ), my.reshape( 1, -1 ) ), 
-        axis=0 )
-P = P + ( fNoise * ( fRight-fLeft )/ fPts ) * np.random.rand( P.shape[0], P.shape[1] )
+th = np.linspace( 0., 2.*np.pi, nPerimeterPoints+1 )[:-1]
 
-#P = np.random.rand( 2, nPoints )
+X = np.concatenate( 
+    ( np.cos( th ).reshape( 1, -1 ), np.sin( th ).reshape( 1, -1 ) ), 
+    axis=0 )
+r = np.sqrt( 2. * np.random.rand( nInteriorPoints ) )
+th2 = 2. * np.pi * np.random.rand( nInteriorPoints )
+Y = np.concatenate( ( 
+    ( r * np.cos( th2 ) ).reshape( 1, -1 ), 
+    ( r * np.sin( th2 ) ).reshape( 1, -1 ) ), 
+    axis=0 )
+
+P = np.concatenate( ( X, Y ), axis=1 )
+P = P[ :, np.random.permutation( P.shape[1] ) ]
+
 tri = Delaunay( P.T ).simplices
-nRemovedPoints =  np.random.permutation( P.shape[1]  )[ :nRemovable ]
+
+#nRemovedPoints =  np.random.permutation( P.shape[1]  )[ :nRemovable ]
+nRemovedPoints = np.where( 
+    np.logical_or( 
+        ( P[0]-0.5 )**2/0.0225 + ( P[1]-0.5 )**2/0.09 < 1., 
+        ( P[0]+0.5 )**2/0.09 + ( P[1]+0.5 )**2/0.0225 < 1.
+    )
+)[0]
+
+
 tri2 = np.array( [ 
         list( i ) for i in tri if 
         i[0] not in nRemovedPoints and 
@@ -54,6 +65,7 @@ plt.quiver(
         P[ 0, FB[:,0] ], P[ 1, FB[:,0] ], 
         V[0], V[1], 
         units='xy', scale=1., headaxislength=3., width=0.005,
+        color='r',
         label='Free boundaries' )
 
 plt.title( r'Test of routine \texttt{Triangulation.\_FastChainLinkSort}' )

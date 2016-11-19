@@ -85,24 +85,25 @@ def Smooth( yInArray, fThreshold, nMaxIterations, L=None, nFixed=None ):
         sys.stderr.write( 'Smooth warning: Max. number of iterations reached.\n' )
     return yOut, IterData, nIterations
 
-def ExtractFace( triFull, SeedArray ):
-    nPrevSize = 0
-    triFace = triFull[ np.where( np.sum( base.ismember( triFull, SeedArray )[0], axis=1 ) > 1. )[0] , : ]
-    nNextSize = triFace.shape[0]
-    while nNextSize != nPrevSize:
-        nPrevSize = nNextSize
-        SeedArray = np.unique( triFace )
-        triFace = triFull[ np.where( np.sum( base.ismember( triFull, SeedArray )[0], axis=1 ) > 1. )[0] , : ]
-        nNextSize = triFace.shape[0]
-
-    return triFace
-
-
 def DifferentiateFaces( TriangIn ):
-    triThis = TriangIn.connectivityList()
     FB = TriangIn.freeBoundary() 
         # No need for chain-link sorting; this was already 
         # done on the creation of the Triangulation object.
+    fbsec = []
+    start = FB[0,0]
+    thissec = [ 0 ]
+    n = 1
+    while n < len( FB ):
+        if FB[n,1]==start:  # end of current section
+            thissec.append( n )
+            fbsec.append( thissec )
+            thissec = []
+        elif thissec==[]:   # start of new section
+            start = FB[n,0]
+            thissec.append( n )
+        n += 1
+    return fbsec
+
 
 
         
