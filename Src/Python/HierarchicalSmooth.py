@@ -10,10 +10,16 @@ import copy                                 # to use deepcopy
 import sys                                  # to write to output streams
 
 
-def Laplacian2D( N ):
-    M = diags( [ np.ones( N-1 ) ], [ 1 ] ) - diags( [ np.ones( N ) ], [ 0 ] )
+def Laplacian2D( N, type='serial' ):    # ...or type='cyclic'
+    M = diags( [ np.ones( N-1 ) ], [ 1 ] ) - diags( [ np.ones( N ) ], [ 0 ] ).tolil()
     M = M.T * M
-    M[ -1, -1 ] = 1.
+    if type=='serial':
+        M[ -1, -1 ] = 1.
+    elif type=='cyclic':
+        M[ 0, 0 ] = 2.
+        M[ 0, -1 ] = M[ -1, 0 ] = -1.
+    else:
+        sys.stderr.write( 'HierarchicalSmooth.Laplacian2D: Unrecognized type \'%s\'.\n' % type )
     return M.tocsc()
 
 def GraphLaplacian( tri ):

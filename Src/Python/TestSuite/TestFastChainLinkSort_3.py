@@ -64,7 +64,7 @@ plt.triplot( P[0], P[1], tri2, label='Surface triangulation' )
 plt.quiver( 
         P[ 0, FB[:,0] ], P[ 1, FB[:,0] ], 
         V[0], V[1], 
-        units='xy', scale=1., headaxislength=3., width=0.005,
+        units='xy', scale=1., headaxislength=4., width=0.005,
         color='r',
         label='Free boundaries' )
 
