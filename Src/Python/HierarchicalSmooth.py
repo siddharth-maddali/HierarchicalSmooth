@@ -9,6 +9,8 @@ import Triangulation as triang              # bare-bones version of Matlab's tri
 import copy                                 # to use deepcopy
 import sys                                  # to write to output streams
 
+###################################################################################################
+
 
 def Laplacian2D( N, type='serial' ):    # ...or type='cyclic'
     M = diags( [ np.ones( N-1 ) ], [ 1 ] ) - diags( [ np.ones( N ) ], [ 0 ] ).tolil()
@@ -22,6 +24,8 @@ def Laplacian2D( N, type='serial' ):    # ...or type='cyclic'
         sys.stderr.write( 'HierarchicalSmooth.Laplacian2D: Unrecognized type \'%s\'.\n' % type )
     return M.tocsc()
 
+###################################################################################################
+
 def GraphLaplacian( tri ):
     nUniq = np.unique( tri )
     nIdx = range( nUniq.size )
@@ -33,19 +37,24 @@ def GraphLaplacian( tri ):
             m = ( j + 4 ) % 3 
             n = ( j + 5 ) % 3
             MLap[ nSubTri[i,l], nSubTri[i,m] ] = -1
-            MLap[ nSubTri[i,l], nSubTri[i,n] ] = -1
-    for i in range( MLap.shape[0] ):
-        MLap[ i, i ] = -MLap[i,:].sum()
-    return MLap.tocsc(), nUniq
-    
+        MLap[ nSubTri[i,l], nSubTri[i,n] ] = -1
+for i in range( MLap.shape[0] ):
+    MLap[ i, i ] = -MLap[i,:].sum()
+return MLap.tocsc(), nUniq
+
+###################################################################################################
+
 def Smooth( yInArray, fThreshold, nMaxIterations, L=None, nFixed=None ):
 
-    if L==None and nFixed==None:
-        N = yInArray.shape[0]
-        L = Laplacian2D( N )
+if L==None
+    N = yInArray.shape[0]
+    if nFixed==None or len( nFixed )==0
+        L = Laplacian2D( N )                                # serial with fixed endpoints
         nFixed = [ 0, N-1 ]
+    else:
+        L = Laplacian2D( N, 'cyclic' )
 
-    nMobile = [ i for i in range( N ) if i not in nFixed ]
+    nMobile = [ i for i in range( N ) if i not in nFixed ]  # cyclic with specified fixed points
     yIn = csc_matrix( yInArray )
 
     if len( nMobile ) < 1:
@@ -91,28 +100,37 @@ def Smooth( yInArray, fThreshold, nMaxIterations, L=None, nFixed=None ):
         sys.stderr.write( 'HiererchicalSmooth.Smooth warning: Max. number of iterations reached.\n' )
     return yOut, IterData, nIterations
 
+###################################################################################################
+
 def DifferentiateFaces( TriangIn ):
     FB = TriangIn.freeBoundary() 
         # No need for chain-link sorting; this was already 
         # done on the creation of the Triangulation object.
-    fbsec = []
+    fblist = []
     start = FB[0,0]
     thissec = [ 0 ]
     n = 1
     while n < len( FB ):
         if FB[n,1]==start:  # end of current section
             thissec.append( n )
-            fbsec.append( thissec )
+            fblist.append( thissec )
             thissec = []
         elif thissec==[]:   # start of new section
             start = FB[n,0]
             thissec.append( n )
         n += 1
-    return fbsec
+    return FB, fblist
+
+###################################################################################################
 
 def HierarchicalSmooth( xPoints, tri, nFaceLabels, nNodeType, bPointSmoothed=None, sLogFile=None ):
+
+    xSmoothed = copy.deepcopy( xPoints )
+
     if bPointSmoothed==None:
         bPointSmoothed = np.zeros( nNodeType.size, dtype=bool )
+        bPointSmoothed[ np.where( np.logical_or( nNodeType==4, nNodeType==14 ) )[0] ]==True 
+            # quad points are considered already 'smoothed'
 
     if sLogFile != None:            # dump status to text file instead of stdout
         sys.stdout = open( sLogFile, 'w' )
@@ -120,26 +138,46 @@ def HierarchicalSmooth( xPoints, tri, nFaceLabels, nNodeType, bPointSmoothed=Non
     nFaces = np.concatenate( (  np.min( nFaceLabels, axis=1 ), np.max( nFaceLabels, axis=1 ) ), axis=1 )
     nUniqFaces = np.vstack( { tuple( row ) for row in nFaces } )
 
+    nCount = 1
     for GB in nUniqFaces:
-        print 'Smoothing GB (%d, %d )...' % GB[0], GB[1]
-        triGB = tri[ base.ismember( tri, GB, 'rows' ), : ]
-        nThesePoints = list( np.unique( triGB ) )
-        nTheseTypes = nNodeType[ nThesePoints ]
-        xGB = xPoints[ :, nThesePoints ]
-        triGB = np.array( base.ismember( triGB,  np.array( nThesePoints )[1] ).reshape( -1, 3 )
+        print 'Interface ( %d, %d ): %d of %d ...' % ( GB[0], GB[1], nCount, len( nUniqFaces )  )
+        facesGB = np.where( base.ismember( nFaces, thisGB.reshape( 1, -1 ), 'rows' )[0] )[0]
+        triGB = tri[ facesGB, : ]
+        pointGB = np.unique( triGB )
+        triGB = np.array( base.ismember( triGB, pointGB )[1] ).reshape( -1, 3 )
+        thisX = xPoints[ :, pointGB ]
+        thisType = nNodeType[ pointGB ]
+        thisSmoothed = bPointSmoothed[ pointGB ]
+        
+        T = triang.Triangulation( triGB, thisX )
+        FB, fbList = hs.DifferentiateFaces( T )
 
+        for thisFB in fbList:   # smoothing entire closed loop
+            thisRange = FB[ thisFB[0]:thisFB[1]+1, 0 ]
+            fixed = list( np.where( thisSmoothed[ thisRange ]==True )[0] )
+            xLoop = Smooth( thisX[ :, thisRange ].T, 1.e-7, 1000, nFixed=fixed )[0].T
+#            xLoop = Smooth( xLoop.T, 1.e-7, 1000, nFixed=fixed )[0].T
+#            xLoop = Smooth( xLoop.T, 1.e-7, 1000, nFixed=fixed )[0].T
+#            xLoop = Smooth( xLoop.T, 1.e-7, 1000, nFixed=fixed )[0].T
 
+            thisX[ :, thisRange ] = xLoop
+            thisSmoothed[ thisRange ] = True
 
-
+        L = GraphLaplacian( triGB )[0]
+        fixed = list( np.where( thisSmoothed==True )[0] )
+        thisXS = Smooth( thisX.T, 1.e-7, 1000, L, nFixed=fixed )[0].T
+#        thisXS = Smooth( thisXS.T, 1.e-7, 1000, L, nFixed=fixed )[0].T
+#        thisXS = Smooth( thisXS.T, 1.e-7, 1000, L, nFixed=fixed )[0].T
+#        thisXS = Smooth( thisXS.T, 1.e-7, 1000, L, nFixed=fixed )[0].T
+        xSmoothed[ :, pointGB ] = thisXS
+        
         print 'done.\n'
-
-
-
+        nCount += 1
 
     sys.stdout = sys.__stdout__     # reset stdout
-
     return xSmoothed
 
+###################################################################################################
         
 
 
