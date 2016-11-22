@@ -88,7 +88,7 @@ def Smooth( yInArray, fThreshold, nMaxIterations, L=None, nFixed=None ):
         nIterations += 1
 
     if nIterations == nMaxIterations:
-        sys.stderr.write( 'Smooth warning: Max. number of iterations reached.\n' )
+        sys.stderr.write( 'HiererchicalSmooth.Smooth warning: Max. number of iterations reached.\n' )
     return yOut, IterData, nIterations
 
 def DifferentiateFaces( TriangIn ):
@@ -110,7 +110,35 @@ def DifferentiateFaces( TriangIn ):
         n += 1
     return fbsec
 
+def HierarchicalSmooth( xPoints, tri, nFaceLabels, nNodeType, bPointSmoothed=None, sLogFile=None ):
+    if bPointSmoothed==None:
+        bPointSmoothed = np.zeros( nNodeType.size, dtype=bool )
 
+    if sLogFile != None:            # dump status to text file instead of stdout
+        sys.stdout = open( sLogFile, 'w' )
+   
+    nFaces = np.concatenate( (  np.min( nFaceLabels, axis=1 ), np.max( nFaceLabels, axis=1 ) ), axis=1 )
+    nUniqFaces = np.vstack( { tuple( row ) for row in nFaces } )
+
+    for GB in nUniqFaces:
+        print 'Smoothing GB (%d, %d )...' % GB[0], GB[1]
+        triGB = tri[ base.ismember( tri, GB, 'rows' ), : ]
+        nThesePoints = list( np.unique( triGB ) )
+        nTheseTypes = nNodeType[ nThesePoints ]
+        xGB = xPoints[ :, nThesePoints ]
+        triGB = np.array( base.ismember( triGB,  np.array( nThesePoints )[1] ).reshape( -1, 3 )
+
+
+
+
+        print 'done.\n'
+
+
+
+
+    sys.stdout = sys.__stdout__     # reset stdout
+
+    return xSmoothed
 
         
 
