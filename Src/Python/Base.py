@@ -1,6 +1,6 @@
 import numpy as np
 import sys
-
+from scipy.sparse import csc_matrix
 
 # intermediate definitions
 
@@ -34,3 +34,8 @@ def ismember( Array1, Array2, comparison_type='list' ):
     else:
         sys.stderr.write( "'ismember' error: invalid comparison type.\n" );
         return [], []
+
+def SparseAssign( mTarget, mSource ):
+    mTargetDense = mTarget.todense()
+    mTargetDense = mSource.todense()
+    return csc_matrix( mTargetDense )

@@ -38,21 +38,21 @@ def GraphLaplacian( tri ):
             n = ( j + 5 ) % 3
             MLap[ nSubTri[i,l], nSubTri[i,m] ] = -1
         MLap[ nSubTri[i,l], nSubTri[i,n] ] = -1
-for i in range( MLap.shape[0] ):
-    MLap[ i, i ] = -MLap[i,:].sum()
-return MLap.tocsc(), nUniq
+    for i in range( MLap.shape[0] ):
+        MLap[ i, i ] = -MLap[i,:].sum()
+    return MLap.tocsc(), nUniq
 
 ###################################################################################################
 
 def Smooth( yInArray, fThreshold, nMaxIterations, L=None, nFixed=None ):
 
-if L==None
-    N = yInArray.shape[0]
-    if nFixed==None or len( nFixed )==0
-        L = Laplacian2D( N )                                # serial with fixed endpoints
-        nFixed = [ 0, N-1 ]
-    else:
-        L = Laplacian2D( N, 'cyclic' )
+    if L==None:
+        N = yInArray.shape[0]
+        if nFixed==None or len( nFixed )==0:
+            L = Laplacian2D( N )                                # serial with fixed endpoints
+            nFixed = [ 0, N-1 ]
+        else:
+            L = Laplacian2D( N, 'cyclic' )
 
     nMobile = [ i for i in range( N ) if i not in nFixed ]  # cyclic with specified fixed points
     yIn = csc_matrix( yInArray )
@@ -135,13 +135,13 @@ def HierarchicalSmooth( xPoints, tri, nFaceLabels, nNodeType, bPointSmoothed=Non
     if sLogFile != None:            # dump status to text file instead of stdout
         sys.stdout = open( sLogFile, 'w' )
    
-    nFaces = np.concatenate( (  np.min( nFaceLabels, axis=1 ), np.max( nFaceLabels, axis=1 ) ), axis=1 )
+    nFaces = np.concatenate( (  np.min( nFaceLabels, axis=1 ).reshape( -1, 1 ), np.max( nFaceLabels, axis=1 ).reshape( -1, 1 ) ), axis=1 )
     nUniqFaces = np.vstack( { tuple( row ) for row in nFaces } )
 
     nCount = 1
     for GB in nUniqFaces:
         print 'Interface ( %d, %d ): %d of %d ...' % ( GB[0], GB[1], nCount, len( nUniqFaces )  )
-        facesGB = np.where( base.ismember( nFaces, thisGB.reshape( 1, -1 ), 'rows' )[0] )[0]
+        facesGB = np.where( base.ismember( nFaces, GB.reshape( 1, -1 ), 'rows' )[0] )[0]
         triGB = tri[ facesGB, : ]
         pointGB = np.unique( triGB )
         triGB = np.array( base.ismember( triGB, pointGB )[1] ).reshape( -1, 3 )
@@ -150,7 +150,7 @@ def HierarchicalSmooth( xPoints, tri, nFaceLabels, nNodeType, bPointSmoothed=Non
         thisSmoothed = bPointSmoothed[ pointGB ]
         
         T = triang.Triangulation( triGB, thisX )
-        FB, fbList = hs.DifferentiateFaces( T )
+        FB, fbList = DifferentiateFaces( T )
 
         for thisFB in fbList:   # smoothing entire closed loop
             thisRange = FB[ thisFB[0]:thisFB[1]+1, 0 ]
@@ -159,8 +159,14 @@ def HierarchicalSmooth( xPoints, tri, nFaceLabels, nNodeType, bPointSmoothed=Non
 #            xLoop = Smooth( xLoop.T, 1.e-7, 1000, nFixed=fixed )[0].T
 #            xLoop = Smooth( xLoop.T, 1.e-7, 1000, nFixed=fixed )[0].T
 #            xLoop = Smooth( xLoop.T, 1.e-7, 1000, nFixed=fixed )[0].T
+            
+#            print thisRange
+#            print len( thisRange )
+#            print xLoop.shape
+#            print xLoop
 
-            thisX[ :, thisRange ] = xLoop
+#            thisX[ :, thisRange ] = xLoop
+            
             thisSmoothed[ thisRange ] = True
 
         L = GraphLaplacian( triGB )[0]
@@ -179,12 +185,3 @@ def HierarchicalSmooth( xPoints, tri, nFaceLabels, nNodeType, bPointSmoothed=Non
 
 ###################################################################################################
         
-
-
-
-
-
-
-
-
-
