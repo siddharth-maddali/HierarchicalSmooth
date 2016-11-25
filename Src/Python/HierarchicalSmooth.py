@@ -8,6 +8,7 @@ import Triangulation as triang              # bare-bones version of Matlab's tri
 
 import copy                                 # to use deepcopy
 import sys                                  # to write to output streams
+import time
 
 ###################################################################################################
 
@@ -46,8 +47,8 @@ def GraphLaplacian( tri ):
 
 def Smooth( yInArray, fThreshold, nMaxIterations, L=None, nFixed=None ):
 
+    N = yInArray.shape[0]
     if L==None:
-        N = yInArray.shape[0]
         if nFixed==None or len( nFixed )==0:
             L = Laplacian2D( N )                                # serial with fixed endpoints
             nFixed = [ 0, N-1 ]
@@ -58,7 +59,7 @@ def Smooth( yInArray, fThreshold, nMaxIterations, L=None, nFixed=None ):
     yIn = csc_matrix( yInArray )
 
     if len( nMobile ) < 1:
-        return yIn, []
+        return yIn.todense(), [], []
 
     IterData = []
     LRed = L[ :, nMobile ][ nMobile, : ]
@@ -77,7 +78,7 @@ def Smooth( yInArray, fThreshold, nMaxIterations, L=None, nFixed=None ):
     LRedTLRed = LRed.T * LRed
     LRedConst = LRed.T * fConst
 
-    fObj1 = hspv._GetObjFn( fEps, fSmallEye, LRedTLRed, yIn, nMobile, LRedConst, D, AyIn )[0]
+    fObj1, yOut = hspv._GetObjFn( fEps, fSmallEye, LRedTLRed, yIn, nMobile, LRedConst, D, AyIn )
     fObj2 = hspv._GetObjFn( fEps+fThreshold, fSmallEye, LRedTLRed, yIn, nMobile, LRedConst, D, AyIn )[0]
     IterData.append( [ fEps, fObj1 ] )
 
@@ -98,7 +99,7 @@ def Smooth( yInArray, fThreshold, nMaxIterations, L=None, nFixed=None ):
 
     if nIterations == nMaxIterations:
         sys.stderr.write( 'HiererchicalSmooth.Smooth warning: Max. number of iterations reached.\n' )
-    return yOut, IterData, nIterations
+    return yOut.todense(), IterData, nIterations
 
 ###################################################################################################
 
@@ -128,21 +129,30 @@ def HierarchicalSmooth( xPoints, tri, nFaceLabels, nNodeType, bPointSmoothed=Non
     xSmoothed = copy.deepcopy( xPoints )
 
     if bPointSmoothed==None:
-        bPointSmoothed = np.zeros( nNodeType.size, dtype=bool )
-        bPointSmoothed[ np.where( np.logical_or( nNodeType==4, nNodeType==14 ) )[0] ]==True 
+        bPointSmoothed = ( nNodeType%10==4 )    # following Dream3d convention.
             # quad points are considered already 'smoothed'
-
+    sOut = sys.stdout
     if sLogFile != None:            # dump status to text file instead of stdout
         sys.stdout = open( sLogFile, 'w' )
    
-    nFaces = np.concatenate( (  np.min( nFaceLabels, axis=1 ).reshape( -1, 1 ), np.max( nFaceLabels, axis=1 ).reshape( -1, 1 ) ), axis=1 )
-    nUniqFaces = np.vstack( { tuple( row ) for row in nFaces } )
-
+    print 'Hashing interface elements (this may take some time)...',
+    t0 = time.time()
+    BoundaryDict = {}
+    for i in range( len( nFaceLabels ) ):
+        if nFaceLabels[i,0] > nFaceLabels[i,1]:
+            nFaceLabels[i,0], nFaceLabels[i,1] = nFaceLabels[i,1], nFaceLabels[i,0]
+            tri[i,0], tri[i,1] = tri[i,1], tri[i,0]
+        try:
+            BoundaryDict[ str( nFaceLabels[i] ) ].append( i )
+        except KeyError:
+            BoundaryDict[ str( nFaceLabels[i] ) ] = [ i ] # start new dictionary entry
+    print '%s seconds. ' % str( time.time() - t0 )
+    nUniqFaces = np.vstack( { tuple( row ) for row in nFaceLabels } )
     nCount = 1
-    for GB in nUniqFaces:
-        print 'Interface ( %d, %d ): %d of %d ...' % ( GB[0], GB[1], nCount, len( nUniqFaces )  )
-        facesGB = np.where( base.ismember( nFaces, GB.reshape( 1, -1 ), 'rows' )[0] )[0]
-        triGB = tri[ facesGB, : ]
+    for GB in BoundaryDict.keys():
+        print 'Interface %s: %d of %d...' % ( GB, nCount, len( nUniqFaces )  ), 
+        t0 = time.time()
+        triGB = tri[ BoundaryDict[ GB ], : ]
         pointGB = np.unique( triGB )
         triGB = np.array( base.ismember( triGB, pointGB )[1] ).reshape( -1, 3 )
         thisX = xPoints[ :, pointGB ]
@@ -151,37 +161,37 @@ def HierarchicalSmooth( xPoints, tri, nFaceLabels, nNodeType, bPointSmoothed=Non
         
         T = triang.Triangulation( triGB, thisX )
         FB, fbList = DifferentiateFaces( T )
+        print FB.shape, 
+        print len( fbList ), 
 
         for thisFB in fbList:   # smoothing entire closed loop
             thisRange = FB[ thisFB[0]:thisFB[1]+1, 0 ]
             fixed = list( np.where( thisSmoothed[ thisRange ]==True )[0] )
-            xLoop = Smooth( thisX[ :, thisRange ].T, 1.e-7, 1000, nFixed=fixed )[0].T
-#            xLoop = Smooth( xLoop.T, 1.e-7, 1000, nFixed=fixed )[0].T
-#            xLoop = Smooth( xLoop.T, 1.e-7, 1000, nFixed=fixed )[0].T
-#            xLoop = Smooth( xLoop.T, 1.e-7, 1000, nFixed=fixed )[0].T
-            
-#            print thisRange
-#            print len( thisRange )
-#            print xLoop.shape
+            xLoop = Smooth( thisX[ :, thisRange ].T, 1.e-4, 2000, nFixed=fixed )[0].T
+#            xLoop = Smooth( xLoop.T, 1.e-4, 2000, nFixed=fixed )[0].T
+#            xLoop = Smooth( xLoop.T, 1.e-4, 2000, nFixed=fixed )[0].T
+#            xLoop = Smooth( xLoop.T, 1.e-4, 2000, nFixed=fixed )[0].T
 #            print xLoop
-
-#            thisX[ :, thisRange ] = xLoop
-            
-            thisSmoothed[ thisRange ] = True
+            thisX[ :, thisRange ] = xLoop
+            bPointSmoothed[ pointGB ][ thisRange ] = True
+        # with this loop, done smoothing all free boundaries in this interface.
 
         L = GraphLaplacian( triGB )[0]
-        fixed = list( np.where( thisSmoothed==True )[0] )
-        thisXS = Smooth( thisX.T, 1.e-7, 1000, L, nFixed=fixed )[0].T
-#        thisXS = Smooth( thisXS.T, 1.e-7, 1000, L, nFixed=fixed )[0].T
-#        thisXS = Smooth( thisXS.T, 1.e-7, 1000, L, nFixed=fixed )[0].T
-#        thisXS = Smooth( thisXS.T, 1.e-7, 1000, L, nFixed=fixed )[0].T
+        fixed = list( np.where( bPointSmoothed[ pointGB ]==True )[0] )
+        thisXS = Smooth( thisX.T, 1.e-4, 2000, L, nFixed=fixed )[0].T
+#        thisXS = Smooth( thisXS.T, 1.e-4, 2000, L, nFixed=fixed )[0].T
+#        thisXS = Smooth( thisXS.T, 1.e-4, 2000, L, nFixed=fixed )[0].T
+#        thisXS = Smooth( thisXS.T, 1.e-4, 2000, L, nFixed=fixed )[0].T
         xSmoothed[ :, pointGB ] = thisXS
+        bPointSmoothed[ pointGB ] = True
         
-        print 'done.\n'
+        
+        print '%s seconds. ' % str( time.time() - t0 ), 
+        print np.where( bPointSmoothed==True )[0].size
         nCount += 1
 
-    sys.stdout = sys.__stdout__     # reset stdout
-    return xSmoothed
+    sys.stdout = sOut     # reset stdout
+    return xSmoothed, bPointSmoothed
 
 ###################################################################################################
         

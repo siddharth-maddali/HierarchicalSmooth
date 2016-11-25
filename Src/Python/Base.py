@@ -35,7 +35,3 @@ def ismember( Array1, Array2, comparison_type='list' ):
         sys.stderr.write( "'ismember' error: invalid comparison type.\n" );
         return [], []
 
-def SparseAssign( mTarget, mSource ):
-    mTargetDense = mTarget.todense()
-    mTargetDense = mSource.todense()
-    return csc_matrix( mTargetDense )
