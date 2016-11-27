@@ -1,7 +1,9 @@
 Untracked
 *.pdf	
 *.mex*
-*.{a,{s,}o}
+*.a
+*.so
+*.o
 .*.swp
 *.m~
 *.asv
