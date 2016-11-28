@@ -164,29 +164,26 @@ def HierarchicalSmooth(
         
         T = triang.Triangulation( triGB, thisX )
         FB, fbList = DifferentiateFaces( T )
-        
-        if len( FB ) > 0:
-            for thisFB in fbList:   # smoothing entire closed loop
-                if len( thisFB ) != 2:
-                    continue
-                thisLoop = FB[ thisFB[0]:thisFB[1]+1, 0 ]
-                nLoop = len( thisLoop )
-                anchorPoints = np.where( ( thisType[ thisLoop ] % 10 )==4 )[0]
-                    # should account for the case where len( anchorPoints ) == 0 for a closed internal free boundary
-                nAP = len( anchorPoints )
-                for i in range( nAP ):
-                    nstart = anchorPoints[i]
-                    nstop = anchorPoints[ (i+1)%nAP ]
-                    if nstop < nstart: # loop around...
-                        tjSegment = thisLoop[ [ j%nLoop for j in range( nstart, nstop+nLoop+1 ) ] ]
-                    else:
-                        tjSegment = thisLoop[ range( nstart, nstop+1 ) ]
-                    if np.any( thisSmoothed[ tjSegment ]==False ): # if not already smoothed...
-                        thisTJ = thisX[ :, tjSegment ]
-                        thisTJSmoothed = Smooth( thisTJ.T, fThreshold, nIterations )[0].T
-    #                    thisTJSmoothed = Smooth( thisTJSmoothed.T, fThreshold, nIterations )[0].T
-                        thisX[ :, tjSegment ] = thisTJSmoothed
-                        thisSmoothed[ tjSegment ] = True
+
+        for thisFB in fbList:   # smoothing entire closed loop
+            thisLoop = FB[ thisFB[0]:thisFB[1]+1, 0 ]
+            nLoop = len( thisLoop )
+            anchorPoints = np.where( ( thisType[ thisLoop ] % 10 )==4 )[0]
+                # should account for the case where len( anchorPoints ) == 0 for a closed internal free boundary
+            nAP = len( anchorPoints )
+            for i in range( nAP ):
+                nstart = anchorPoints[i]
+                nstop = anchorPoints[ (i+1)%nAP ]
+                if nstop < nstart: # loop around...
+                    tjSegment = thisLoop[ [ j%nLoop for j in range( nstart, nstop+nLoop+1 ) ] ]
+                else:
+                    tjSegment = thisLoop[ range( nstart, nstop+1 ) ]
+                if np.any( thisSmoothed[ tjSegment ]==False ): # if not already smoothed...
+                    thisTJ = thisX[ :, tjSegment ]
+                    thisTJSmoothed = Smooth( thisTJ.T, fThreshold, nIterations )[0].T
+#                    thisTJSmoothed = Smooth( thisTJSmoothed.T, fThreshold, nIterations )[0].T
+                    thisX[ :, tjSegment ] = thisTJSmoothed
+                    thisSmoothed[ tjSegment ] = True
 
         L = GraphLaplacian( triGB )[0]
         fixed = list( np.where( thisSmoothed==True )[0] )
