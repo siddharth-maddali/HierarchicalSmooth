@@ -1,24 +1,31 @@
 /* 
+ *
  * Base.h -- Contains basic function definitions 
+ *
  */
 
 #ifndef _HSMOOTH_BASE
 #define _HSMOOTH_BASE
 
 #include <iostream>
+#include <unordered_map>
 
 #include "Eigen/Eigen"
 
-/*  -- output type for the ismember function */
-typedef std::tuple< Eigen::Array<bool,Dynamic,2> Array1, std::vector<unsigned> > baseOut;
+using namespace std;
+using namespace Eigen;
 
-namespace HSmooth_base{ 
+typedef Eigen::Array< size_t, Eigen::Dynamic, 3 > trimesh;
 
-	baseOut ismsmber( 
+namespace HSmoothBase{ 
+
+/* ismember:
+ * Mimics the basic functionality of Matlab's 'ismember' function, currently only for 
+ * integer arrays with 3 columns because it is used on triangulations.
+ */
+	trimesh ismember( trimesh& Array1, VectorXi& Array2 );
 
 }
-
-
 
 #endif
 
