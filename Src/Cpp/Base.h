@@ -12,9 +12,6 @@
 
 #include "Eigen/Eigen"
 
-using namespace std;
-using namespace Eigen;
-
 typedef Eigen::Array< size_t, Eigen::Dynamic, 3 > trimesh;
 
 namespace HSmoothBase{ 
@@ -23,7 +20,7 @@ namespace HSmoothBase{
  * Mimics the basic functionality of Matlab's 'ismember' function, currently only for 
  * integer arrays with 3 columns because it is used on triangulations.
  */
-	trimesh ismember( trimesh& Array1, VectorXi& Array2 );
+	trimesh ismember( trimesh& Array1, std::vector<int>& Array2 );
 
 }
 

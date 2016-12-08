@@ -1,0 +1,15 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+HSmoothBase	Base.h	/^namespace HSmoothBase{ $/;"	n
+HSmoothMain	HierarchicalSmooth.h	/^namespace HSmoothMain{ $/;"	n
+Laplacian2D	HierarchicalSmooth.cpp	/^SpMat HSmoothMain::Laplacian2D( size_t N, std::string type ) {$/;"	f	class:HSmoothMain
+SpMat	HierarchicalSmooth.h	/^typedef Eigen::SparseMatrix<double> SpMat;$/;"	t
+T	HierarchicalSmooth.h	/^typedef Eigen::Triplet<double>	T;$/;"	t
+_HSMOOTH_BASE	Base.h	8;"	d
+_HSMOOTH_HSMOOTH	HierarchicalSmooth.h	9;"	d
+ismember	Base.cpp	/^trimesh HSmoothBase::ismember( trimesh& Array1, std::vector<int>& Array2 ) {$/;"	f	class:HSmoothBase
+trimesh	Base.h	/^typedef Eigen::Array< size_t, Eigen::Dynamic, 3 > trimesh;$/;"	t
