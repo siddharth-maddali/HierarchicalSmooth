@@ -65,7 +65,8 @@ def GraphLaplacian( tri ):
             m = ( j + 4 ) % 3 
             n = ( j + 5 ) % 3
             MLap[ nSubTri[i,l], nSubTri[i,m] ] = -1
-        MLap[ nSubTri[i,l], nSubTri[i,n] ] = -1
+            MLap[ nSubTri[i,m], nSubTri[i,l] ] = -1
+#        MLap[ nSubTri[i,l], nSubTri[i,n] ] = -1
     for i in range( MLap.shape[0] ):
         MLap[ i, i ] = -MLap[i,:].sum()
     return MLap.tocsc(), nUniq
