@@ -35,3 +35,18 @@ SpMat HSmoothMain::Laplacian2D( size_t N, std::string type ) {
 }
 
 //============================================================================================
+
+SpMat HSmoothMain::GraphLaplacian( trimesh& tri ) {
+	vector< size_t > nUnique;
+	for( size_t i = 0; i < tri.rows(); i++ ) {
+		for( size_t j = 0; j < tri.cols(); j++ ) {
+			nUnique.push_back( tri( i, j );
+		}
+	}
+	std::sort( nUnique.begin(), nUnique.end() );
+	nUnique.erase( std::unique( nUnique.begin(), nUnique.end() ), nUnique.end() );
+
+	trimesh nSubTri = HSmoothBase::ismember( tri, nUnique );
+
+	return L;
+}

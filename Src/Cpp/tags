@@ -11,5 +11,5 @@ SpMat	HierarchicalSmooth.h	/^typedef Eigen::SparseMatrix<double> SpMat;$/;"	t
 T	HierarchicalSmooth.h	/^typedef Eigen::Triplet<double>	T;$/;"	t
 _HSMOOTH_BASE	Base.h	8;"	d
 _HSMOOTH_HSMOOTH	HierarchicalSmooth.h	9;"	d
-ismember	Base.cpp	/^trimesh HSmoothBase::ismember( trimesh& Array1, std::vector<int>& Array2 ) {$/;"	f	class:HSmoothBase
+ismember	Base.cpp	/^trimesh HSmoothBase::ismember( trimesh& Array1, std::vector<size_t>& Array2 ) {$/;"	f	class:HSmoothBase
 trimesh	Base.h	/^typedef Eigen::Array< size_t, Eigen::Dynamic, 3 > trimesh;$/;"	t

@@ -10,7 +10,7 @@
 
 //============================================================================================
 
-trimesh HSmoothBase::ismember( trimesh& Array1, std::vector<int>& Array2 ) {
+trimesh HSmoothBase::ismember( trimesh& Array1, std::vector<size_t>& Array2 ) {
 	
 	std::unordered_map< size_t, size_t > MyDict; // dictionary lookup for faster access
 	for( size_t i = 0; i < Array2.size(); i++ ) 

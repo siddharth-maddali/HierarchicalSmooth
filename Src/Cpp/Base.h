@@ -20,7 +20,7 @@ namespace HSmoothBase{
  * Mimics the basic functionality of Matlab's 'ismember' function, currently only for 
  * integer arrays with 3 columns because it is used on triangulations.
  */
-	trimesh ismember( trimesh& Array1, std::vector<int>& Array2 );
+	trimesh ismember( trimesh& Array1, std::vector<size_t>& Array2 );
 
 }
 
