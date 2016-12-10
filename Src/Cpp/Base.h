@@ -23,7 +23,6 @@ namespace HSmoothBase{
 	trimesh ismember( trimesh& Array1, std::vector<size_t>& Array2 );
 
 }
-
 #endif
 
 

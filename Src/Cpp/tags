@@ -4,6 +4,7 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+GraphLaplacian	HierarchicalSmooth.cpp	/^SpMat HSmoothMain::GraphLaplacian( trimesh& tri ) { $/;"	f	class:HSmoothMain
 HSmoothBase	Base.h	/^namespace HSmoothBase{ $/;"	n
 HSmoothMain	HierarchicalSmooth.h	/^namespace HSmoothMain{ $/;"	n
 Laplacian2D	HierarchicalSmooth.cpp	/^SpMat HSmoothMain::Laplacian2D( size_t N, std::string type ) {$/;"	f	class:HSmoothMain
