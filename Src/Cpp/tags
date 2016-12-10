@@ -4,12 +4,15 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+DictBase	HierarchicalSmooth.h	/^struct DictBase {$/;"	s
+EdgeDict	HierarchicalSmooth.h	/^	typedef std::unordered_map< EdgePair, T, boost::hash< EdgePair > > EdgeDict;$/;"	t	struct:DictBase
+EdgePair	HierarchicalSmooth.h	/^typedef std::pair< size_t, size_t >	EdgePair;$/;"	t
 GraphLaplacian	HierarchicalSmooth.cpp	/^SpMat HSmoothMain::GraphLaplacian( trimesh& tri ) { $/;"	f	class:HSmoothMain
 HSmoothBase	Base.h	/^namespace HSmoothBase{ $/;"	n
 HSmoothMain	HierarchicalSmooth.h	/^namespace HSmoothMain{ $/;"	n
 Laplacian2D	HierarchicalSmooth.cpp	/^SpMat HSmoothMain::Laplacian2D( size_t N, std::string type ) {$/;"	f	class:HSmoothMain
-SpMat	HierarchicalSmooth.h	/^typedef Eigen::SparseMatrix<double> SpMat;$/;"	t
-T	HierarchicalSmooth.h	/^typedef Eigen::Triplet<double>	T;$/;"	t
+SpMat	HierarchicalSmooth.h	/^typedef Eigen::SparseMatrix<double>	SpMat;$/;"	t
+T	HierarchicalSmooth.h	/^typedef Eigen::Triplet<double>		T;$/;"	t
 _HSMOOTH_BASE	Base.h	8;"	d
 _HSMOOTH_HSMOOTH	HierarchicalSmooth.h	9;"	d
 ismember	Base.cpp	/^trimesh HSmoothBase::ismember( trimesh& Array1, std::vector<size_t>& Array2 ) {$/;"	f	class:HSmoothBase
