@@ -137,3 +137,45 @@ EdgeList HSmoothTri::Triangulation::FastChainLinkSort( EdgeList& inList ) {
 }
 
 //===================================================================================
+
+std::tuple< SpMat, std::vector< size_t > > HSmoothTri::Triangulation::GraphLaplacian( void ) {
+	// most of the work already done in method GetEdges
+	std::vector< T > tripletList;	
+	tripletList.reserve( nUnique.size() + 2*Mesh.rows()*Mesh.cols() );
+	for( DictBase< EdgeCount >::EdgeDict::iterator it = MyDict.begin(); it != MyDict.end(); ++it ) {
+		size_t l = std::get<0>( it->first );
+		size_t m = std::get<1>( it->first );
+		tripletList.push_back( T( l, m, -1.0 ) );
+		tripletList.push_back( T( m, l, -1.0 ) );
+	}
+	for( size_t i = 0; i < fDiagCount.size(); i++ )
+		tripletList.push_back( T( i, i, fDiagCount[i] ) );
+
+	SpMat GL = SpMat( nUnique.size(), nUnique.size() );
+	GL.setFromTriplets( tripletList.begin(), tripletList.end() );
+	GL.makeCompressed();
+
+	return std::make_tuple( GL, nUnique );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

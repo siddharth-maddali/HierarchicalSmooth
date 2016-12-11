@@ -13,6 +13,7 @@ EdgePair	Triangulation.h	/^typedef std::pair< size_t, size_t > EdgePair;$/;"	t
 FastChainLinkSort	Triangulation.cpp	/^EdgeList HSmoothTri::Triangulation::FastChainLinkSort( EdgeList& inList ) {$/;"	f	class:HSmoothTri::Triangulation
 GetEdges	Triangulation.cpp	/^std::tuple< EdgeList, EdgeList > HSmoothTri::Triangulation::GetEdges( trimesh& inTri ) {$/;"	f	class:HSmoothTri::Triangulation
 GraphLaplacian	HierarchicalSmooth.cpp	/^std::tuple< SpMat, std::vector< size_t> > HSmoothMain::GraphLaplacian( trimesh& tri ) { $/;"	f	class:HSmoothMain
+GraphLaplacian	Triangulation.cpp	/^std::tuple< SpMat, std::vector< size_t > > HSmoothTri::Triangulation::GraphLaplacian( void ) {$/;"	f	class:HSmoothTri::Triangulation
 HSmoothBase	Base.h	/^namespace HSmoothBase{ $/;"	n
 HSmoothMain	HierarchicalSmooth.h	/^namespace HSmoothMain{ $/;"	n
 HSmoothTri	Triangulation.h	/^namespace HSmoothTri {$/;"	n

@@ -65,6 +65,7 @@ namespace HSmoothTri {
 		trimesh connectivityList( void );
 		EdgeList allEdges( void );
 		std::tuple< EdgeList, EdgeList> freeBoundary( void );		// in proper winding order!
+		std::tuple< SpMat, std::vector< size_t > > GraphLaplacian( void );
 
 		private:
 		// member objects
@@ -77,7 +78,6 @@ namespace HSmoothTri {
 		// member functions
 		std::tuple< EdgeList, EdgeList > GetEdges( trimesh& );
 		EdgeList FastChainLinkSort( EdgeList& );
-		std::tuple< SpMat, std::vector< size_t > > GraphLaplacian( void );
 		void differentiateFaces( void );
 
 	};
