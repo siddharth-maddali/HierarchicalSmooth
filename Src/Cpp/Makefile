@@ -10,7 +10,7 @@ MYLIB_PATH=.
 EIGEN_PATH=${HOME}/MyLibraries/Eigen
 
 # Source files
-MYLIB_CPPS=Base.cpp HierarchicalSmooth.cpp
+MYLIB_CPPS=Base.cpp HierarchicalSmooth.cpp Triangulation.cpp
 
 ######################################
 # COMPILER AND FLAGS

@@ -38,7 +38,7 @@ SpMat HSmoothMain::Laplacian2D( size_t N, std::string type ) {
 
 //============================================================================================
 
-SpMat HSmoothMain::GraphLaplacian( trimesh& tri ) { 
+std::tuple< SpMat, std::vector< size_t> > HSmoothMain::GraphLaplacian( trimesh& tri ) { 
 
 	std::vector< size_t > nUnique;
 	for( size_t i = 0; i < tri.rows(); i++ ) 
@@ -46,7 +46,6 @@ SpMat HSmoothMain::GraphLaplacian( trimesh& tri ) {
 			nUnique.push_back( tri( i, j ) );
 	std::sort( nUnique.begin(), nUnique.end() );
 	nUnique.erase( std::unique( nUnique.begin(), nUnique.end() ), nUnique.end() );
-	size_t MaxIdx = 1 + nUnique.back();
 
 	std::vector< T > tripletList;
 	tripletList.reserve( nUnique.size() + tri.rows()*tri.cols()*2 );
@@ -81,7 +80,7 @@ SpMat HSmoothMain::GraphLaplacian( trimesh& tri ) {
 	SpMat MLap( nUnique.size(), nUnique.size() );
 	MLap.setFromTriplets( tripletList.begin(), tripletList.end() );
 	MLap.makeCompressed();
-	return MLap;
+	return std::make_tuple( MLap, nUnique );
 }
 
 //============================================================================================
