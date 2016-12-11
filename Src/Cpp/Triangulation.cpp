@@ -10,6 +10,7 @@ HSmoothTri::Triangulation::Triangulation( trimesh& inTri ) {
 	std::tuple< EdgeList, EdgeList > GetAllEdges = GetEdges( Mesh );
 	edge_list = std::get<0>( GetAllEdges );
 	free_boundary = std::get<1>( GetAllEdges );
+	differentiateFaces();
 
 }
 
@@ -27,18 +28,30 @@ EdgeList HSmoothTri::Triangulation::allEdges( void ) {
 
 //===================================================================================
 
-EdgeList HSmoothTri::Triangulation::freeBoundary( void ) {
-	return free_boundary;
+std::tuple< EdgeList, EdgeList > HSmoothTri::Triangulation::freeBoundary( void ) {
+	return std::make_tuple( free_boundary, free_boundary_segments );
 }
 
 //===================================================================================
-// COMING SOON...
-//std::tuple< EdgeList, EdgeList > HSmoothTri::Triangulation::differentiateFaces( void ) {
-//
-//	std::tuple retval = std::make_tuple( free_boundary, sections );
-//	return retval;
-//}
-//
+void HSmoothTri::Triangulation::differentiateFaces( void ) {
+	size_t start = std::get<0>( free_boundary[0] );
+	std::vector< size_t > thissec{ 0 };
+	size_t n = 1;
+	while( n < free_boundary.size() ) {
+		if( std::get<1>( free_boundary[n] ) == start ) {
+			thissec.push_back( n );
+			free_boundary_segments.push_back( std::make_pair( thissec[0], thissec[1] ) );
+			thissec.clear();
+		}
+		else if( thissec.size() == 0 ) { 
+			start = std::get<0>( free_boundary[n] );
+			thissec.push_back( n );
+		}
+		n++;
+	}
+	return;
+}
+
 //===================================================================================
 
 /*

@@ -64,13 +64,12 @@ namespace HSmoothTri {
 
 		trimesh connectivityList( void );
 		EdgeList allEdges( void );
-		EdgeList freeBoundary( void );		// in proper winding order!
-		std::tuple< EdgeList, EdgeList > differentiateFaces( void );
+		std::tuple< EdgeList, EdgeList> freeBoundary( void );		// in proper winding order!
 
 		private:
 		// member objects
 		trimesh Mesh, nSubTri;				// the Delaunay triangulation from which everything is derived
-		EdgeList edge_list, free_boundary;
+		EdgeList edge_list, free_boundary, free_boundary_segments;
 		std::vector< size_t > nUnique;
 		DictBase< EdgeCount >::EdgeDict MyDict;
 		std::vector< double > fDiagCount;
@@ -79,6 +78,7 @@ namespace HSmoothTri {
 		std::tuple< EdgeList, EdgeList > GetEdges( trimesh& );
 		EdgeList FastChainLinkSort( EdgeList& );
 		std::tuple< SpMat, std::vector< size_t > > GraphLaplacian( void );
+		void differentiateFaces( void );
 
 	};
 }
