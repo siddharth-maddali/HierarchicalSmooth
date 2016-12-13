@@ -7,12 +7,7 @@
 #ifndef _HSMOOTH_BASE
 #define _HSMOOTH_BASE
 
-#include <iostream>
-#include <unordered_map>
-
-#include "Eigen/Eigen"
-
-typedef Eigen::Array< size_t, Eigen::Dynamic, 3 > trimesh;
+#include "Types.h"
 
 namespace HSmoothBase{ 
 

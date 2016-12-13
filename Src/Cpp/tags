@@ -4,12 +4,8 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
-DictBase	Triangulation.h	/^struct DictBase {$/;"	s
 EdgeCount	Triangulation.h	/^	EdgeCount( size_t x, size_t y ) {$/;"	f	struct:EdgeCount
 EdgeCount	Triangulation.h	/^struct EdgeCount {$/;"	s
-EdgeDict	Triangulation.h	/^	typedef std::unordered_map< EdgePair, T, boost::hash< EdgePair > > EdgeDict;$/;"	t	struct:DictBase
-EdgeList	Triangulation.h	/^typedef std::vector< EdgePair > EdgeList;$/;"	t
-EdgePair	Triangulation.h	/^typedef std::pair< size_t, size_t > EdgePair;$/;"	t
 FastChainLinkSort	Triangulation.cpp	/^EdgeList HSmoothTri::Triangulation::FastChainLinkSort( EdgeList& inList ) {$/;"	f	class:HSmoothTri::Triangulation
 GetEdges	Triangulation.cpp	/^std::tuple< EdgeList, EdgeList > HSmoothTri::Triangulation::GetEdges( trimesh& inTri ) {$/;"	f	class:HSmoothTri::Triangulation
 GraphLaplacian	HierarchicalSmooth.cpp	/^std::tuple< SpMat, std::vector< size_t> > HSmoothMain::GraphLaplacian( trimesh& tri ) { $/;"	f	class:HSmoothMain
@@ -20,13 +16,11 @@ HSmoothTri	Triangulation.h	/^namespace HSmoothTri {$/;"	n
 Laplacian2D	HierarchicalSmooth.cpp	/^SpMat HSmoothMain::Laplacian2D( size_t N, std::string type ) {$/;"	f	class:HSmoothMain
 Mesh	Triangulation.h	/^		trimesh Mesh, nSubTri;				\/\/ the Delaunay triangulation from which everything is derived$/;"	m	class:HSmoothTri::Triangulation
 MyDict	Triangulation.h	/^		DictBase< EdgeCount >::EdgeDict MyDict;$/;"	m	class:HSmoothTri::Triangulation
-SpMat	Triangulation.h	/^typedef Eigen::SparseMatrix<double>	SpMat;$/;"	t
-T	Triangulation.h	/^typedef Eigen::Triplet<double>		T;$/;"	t
 Triangulation	Triangulation.cpp	/^HSmoothTri::Triangulation::Triangulation( trimesh& inTri ) {$/;"	f	class:HSmoothTri::Triangulation
 Triangulation	Triangulation.h	/^	class Triangulation {$/;"	c	namespace:HSmoothTri
 _HSMOOTH_BASE	Base.h	8;"	d
 _HSMOOTH_HSMOOTH	HierarchicalSmooth.h	9;"	d
-_HSMOOTH_TRI	Triangulation.h	11;"	d
+_HSMOOTH_TRI	Triangulation.h	13;"	d
 allEdges	Triangulation.cpp	/^EdgeList HSmoothTri::Triangulation::allEdges( void ) {$/;"	f	class:HSmoothTri::Triangulation
 connectivityList	Triangulation.cpp	/^trimesh HSmoothTri::Triangulation::connectivityList( void ) {$/;"	f	class:HSmoothTri::Triangulation
 differentiateFaces	Triangulation.cpp	/^void HSmoothTri::Triangulation::differentiateFaces( void ) {$/;"	f	class:HSmoothTri::Triangulation
@@ -40,4 +34,3 @@ nSubTri	Triangulation.h	/^		trimesh Mesh, nSubTri;				\/\/ the Delaunay triangul
 nUnique	Triangulation.h	/^		std::vector< size_t > nUnique;$/;"	m	class:HSmoothTri::Triangulation
 ncount	Triangulation.h	/^	int ncount;$/;"	m	struct:EdgeCount
 orig_pair	Triangulation.h	/^	EdgePair orig_pair;$/;"	m	struct:EdgeCount
-trimesh	Base.h	/^typedef Eigen::Array< size_t, Eigen::Dynamic, 3 > trimesh;$/;"	t

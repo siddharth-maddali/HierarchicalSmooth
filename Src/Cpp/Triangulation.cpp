@@ -158,24 +158,4 @@ std::tuple< SpMat, std::vector< size_t > > HSmoothTri::Triangulation::GraphLapla
 	return std::make_tuple( GL, nUnique );
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//===================================================================================

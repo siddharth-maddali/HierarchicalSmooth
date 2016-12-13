@@ -4,7 +4,6 @@
  *
  */
 
-#include "Base.h"
 #include "HierarchicalSmooth.h"
 
 
