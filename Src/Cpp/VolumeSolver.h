@@ -15,33 +15,42 @@
 
 #include "Types.h"
 #include "Base.h"
+#include "Triangulation.h"
+
+#include "igl/slice.h"	// for slicing operations on Eigen matrix types
 
 namespace VolumeSolver {
 
 	class VolumeSolver {
+	
 		public:
-		VolumeSolver( 
-			trimesh& VolumeMesh, meshnode& SurfaceNodes, 
-			facelabel& FLabels, nodetype& NodeType 
+		// constructor
+		VolumeSolver( trimesh&, meshnode&,facelabel&, nodetype&, size_t=53 );
+			// the last integer default is the number of bisections in each call
+			// to the core smoothing routine. Obtained from a typical machine 
+			// zero value of ~10^16.
+
+		// smoother
+		bool HierarchicalSmooth( 
+			bool=false, std::string="Smooth.Default.log"
 		);
-		meshnode HierarchicalSmooth( 
-			bool logging=false, std::string logfile="Smooth.Default.log"
-		);
+
+		// writer
+		meshnode GetSmoothed( void ) { return vsNodeSmooth };
 
 		private:
 		// member objects; all these are instantiated in the constructor
 		is_smoothed Status;
 		trimesh vsMesh;
-		meshnode vsNode;
+		meshnode vsNode, vsNodeSmooth;
 		facelabel vsLabel;
 		nodetype vsType;
 		int MaxIterations;
-		std::unordered_map< size_t, std::vector< size_t > > vsBoundaryDict;
+		std::fstream fout;	// log file handle
+		Dictbase< std::vector< size_t > >::EdgeDict vsBoundaryDict;
 
 		// member functions
-		std::tuple< trimesh, meshnode, nodetype	> BuildBoundary( std::vector< size_t >& FromThesePatches );
-		bool SmoothBoundary( std::tuple< trimesh, meshnode, nodetype > );
-		bool Smooth2D( 
+		trimesh SliceMesh( std::vector< size_t >& );
 
 	};
 

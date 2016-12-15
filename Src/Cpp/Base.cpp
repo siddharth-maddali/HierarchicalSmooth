@@ -27,3 +27,13 @@ trimesh HSmoothBase::ismember( trimesh& Array1, std::vector<size_t>& Array2 ) {
 }
 
 //============================================================================================
+
+matindex HSmoothBase::getindex( std::vector< size_t >& FromThis ) {
+	matindex I( FromThis.size() );
+	for( size_t i = 0; i < FromThis.size(); i++ )
+		I( i ) = FromThis[i];
+
+	return I;
+}
+
+//============================================================================================

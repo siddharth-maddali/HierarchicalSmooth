@@ -16,6 +16,7 @@ namespace HSmoothBase{
  * integer arrays with 3 columns because it is used on triangulations.
  */
 	trimesh ismember( trimesh& Array1, std::vector<size_t>& Array2 );
+	matindex getindex( std::vector< size_t >& );
 
 }
 #endif

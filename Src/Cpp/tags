@@ -9,7 +9,7 @@ EdgeCount	Triangulation.h	/^struct EdgeCount {$/;"	s
 FastChainLinkSort	Triangulation.cpp	/^EdgeList HSmoothTri::Triangulation::FastChainLinkSort( EdgeList& inList ) {$/;"	f	class:HSmoothTri::Triangulation
 GetEdges	Triangulation.cpp	/^std::tuple< EdgeList, EdgeList > HSmoothTri::Triangulation::GetEdges( trimesh& inTri ) {$/;"	f	class:HSmoothTri::Triangulation
 GraphLaplacian	HierarchicalSmooth.cpp	/^std::tuple< SpMat, std::vector< size_t> > HSmoothMain::GraphLaplacian( trimesh& tri ) { $/;"	f	class:HSmoothMain
-GraphLaplacian	Triangulation.cpp	/^std::tuple< SpMat, std::vector< size_t > > HSmoothTri::Triangulation::GraphLaplacian( void ) {$/;"	f	class:HSmoothTri::Triangulation
+GraphLaplacian	Triangulation.cpp	/^std::tuple< SpMat, matindex > HSmoothTri::Triangulation::GraphLaplacian( void ) {$/;"	f	class:HSmoothTri::Triangulation
 HSmoothBase	Base.h	/^namespace HSmoothBase{ $/;"	n
 HSmoothMain	HierarchicalSmooth.h	/^namespace HSmoothMain{ $/;"	n
 HSmoothTri	Triangulation.h	/^namespace HSmoothTri {$/;"	n
@@ -29,6 +29,7 @@ fDiagCount	Triangulation.h	/^		std::vector< double > fDiagCount;$/;"	m	class:HSm
 freeBoundary	Triangulation.cpp	/^std::tuple< EdgeList, EdgeList > HSmoothTri::Triangulation::freeBoundary( void ) {$/;"	f	class:HSmoothTri::Triangulation
 free_boundary	Triangulation.h	/^		EdgeList edge_list, free_boundary, free_boundary_segments;$/;"	m	class:HSmoothTri::Triangulation
 free_boundary_segments	Triangulation.h	/^		EdgeList edge_list, free_boundary, free_boundary_segments;$/;"	m	class:HSmoothTri::Triangulation
+getindex	Base.cpp	/^matindex HSmoothBase::getindex( std::vector< size_t >& FromThis ) {$/;"	f	class:HSmoothBase
 ismember	Base.cpp	/^trimesh HSmoothBase::ismember( trimesh& Array1, std::vector<size_t>& Array2 ) {$/;"	f	class:HSmoothBase
 nSubTri	Triangulation.h	/^		trimesh Mesh, nSubTri;				\/\/ the Delaunay triangulation from which everything is derived$/;"	m	class:HSmoothTri::Triangulation
 nUnique	Triangulation.h	/^		std::vector< size_t > nUnique;$/;"	m	class:HSmoothTri::Triangulation

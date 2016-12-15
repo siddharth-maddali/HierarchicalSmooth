@@ -33,8 +33,8 @@ namespace HSmoothTri {
 
 		trimesh connectivityList( void );
 		EdgeList allEdges( void );
-		std::tuple< EdgeList, EdgeList> freeBoundary( void );		// in proper winding order!
-		std::tuple< SpMat, std::vector< size_t > > GraphLaplacian( void );
+		std::tuple< EdgeList, EdgeList > freeBoundary( void );		// in proper winding order!
+		std::tuple< SpMat, matindex > GraphLaplacian( void );
 
 		private:
 		// member objects

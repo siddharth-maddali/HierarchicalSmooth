@@ -138,7 +138,7 @@ EdgeList HSmoothTri::Triangulation::FastChainLinkSort( EdgeList& inList ) {
 
 //===================================================================================
 
-std::tuple< SpMat, std::vector< size_t > > HSmoothTri::Triangulation::GraphLaplacian( void ) {
+std::tuple< SpMat, matindex > HSmoothTri::Triangulation::GraphLaplacian( void ) {
 	// most of the work already done in method GetEdges
 	std::vector< T > tripletList;	
 	tripletList.reserve( nUnique.size() + 2*Mesh.rows()*Mesh.cols() );
@@ -155,7 +155,7 @@ std::tuple< SpMat, std::vector< size_t > > HSmoothTri::Triangulation::GraphLapla
 	GL.setFromTriplets( tripletList.begin(), tripletList.end() );
 	GL.makeCompressed();
 
-	return std::make_tuple( GL, nUnique );
+	return std::make_tuple( GL, HSmoothBase::getindex( nUnique ) );
 }
 
 //===================================================================================

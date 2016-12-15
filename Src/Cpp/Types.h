@@ -45,7 +45,7 @@ typedef Eigen::Array< size_t, Eigen::Dynamic, 2 > facelabels;
  * ( denoted by 2, 3, 4 respectively if on the interior and 
  * 12, 13, 14 if on the volume surface.
  */
-typedef Eigen::Array< size_t, Eigen:Dynamic > nodetype;
+typedef Eigen::Array< size_t, Eigen::Dynamic, 1 > nodetype;
 
 /*
  * is_smoothed:
@@ -53,7 +53,15 @@ typedef Eigen::Array< size_t, Eigen:Dynamic > nodetype;
  * or not. At the beginning, only the nodetypes 4 and 14 should 
  * be initialized to true, the others should be false. 
  */
-typedef Eigen:Array< bool, Eigen::Dynamic > is_smoothed;
+typedef Eigen::Array< bool, Eigen::Dynamic, 1 > is_smoothed;
+
+/*
+ * matindex:
+ * Special typedef of an Eigen vector of integers to indicate
+ * an array of indices, to be used in slicing with libigl.
+ */
+typedef Eigen::Matrix< size_t, Eigen::Dynamic, 1 > matindex;
+
 
 
 /*

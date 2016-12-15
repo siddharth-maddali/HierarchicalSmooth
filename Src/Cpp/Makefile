@@ -8,6 +8,7 @@ LIB=hsmooth
 # Include paths
 MYLIB_PATH=.
 EIGEN_PATH=${HOME}/MyLibraries/Eigen
+IGL_PATH=${HOME}/MyLibriraies/libigl
 
 # Source files
 MYLIB_CPPS=Base.cpp HierarchicalSmooth.cpp Triangulation.cpp
@@ -24,7 +25,7 @@ HEADER_FILES=$(patsubst %.cpp, %.h, $(MYLIB_CPPS) )
 
 OBJS = $(patsubst %.cpp, %.o, $(CPPS))
 
-INCL = -I. -I$(MYLIB_PATH) -I$(EIGEN_PATH)
+INCL = -I. -I$(MYLIB_PATH) -I$(EIGEN_PATH) -I$(IGL_PATH)
 
 PRIMARY_FLAGS=-Wno-deprecated-declarations 
 OPTIMIZER_FLAGS= -O2 -ftree-vectorize -std=c++11 -fPIC
