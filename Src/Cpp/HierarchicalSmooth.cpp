@@ -9,11 +9,11 @@
 
 //============================================================================================
 
-SpMat HSmoothMain::Laplacian2D( size_t N, std::string type ) {
+SpMat HSmoothMain::Laplacian2D( int N, std::string type ) {
 
 	std::vector< T > tripletList;
 	tripletList.reserve( 3*N ); // approx. number of nonzero elements
-	for( size_t i = 0; i < N; i++ ) {
+	for( int i = 0; i < N; i++ ) {
 		tripletList.push_back( T( i, i, -1.0 ) );
 		if( i != N-1 )
 			tripletList.push_back( T( i, i+1, 1.0 ) );
@@ -37,11 +37,11 @@ SpMat HSmoothMain::Laplacian2D( size_t N, std::string type ) {
 
 //============================================================================================
 
-std::tuple< SpMat, std::vector< size_t> > HSmoothMain::GraphLaplacian( trimesh& tri ) { 
+std::tuple< SpMat, std::vector< int> > HSmoothMain::GraphLaplacian( trimesh& tri ) { 
 
-	std::vector< size_t > nUnique;
-	for( size_t i = 0; i < tri.rows(); i++ ) 
-		for( size_t j = 0; j < tri.cols(); j++ ) 
+	std::vector< int > nUnique;
+	for( int i = 0; i < tri.rows(); i++ ) 
+		for( int j = 0; j < tri.cols(); j++ ) 
 			nUnique.push_back( tri( i, j ) );
 	std::sort( nUnique.begin(), nUnique.end() );
 	nUnique.erase( std::unique( nUnique.begin(), nUnique.end() ), nUnique.end() );
@@ -53,15 +53,15 @@ std::tuple< SpMat, std::vector< size_t> > HSmoothMain::GraphLaplacian( trimesh& 
 
 	trimesh nSubTri = HSmoothBase::ismember( tri, nUnique );
 
-	DictBase< size_t >::EdgeDict MyDict;
-	for( size_t i = 0; i < nSubTri.rows(); i++ ) {
-		for( size_t j = 0; j < 3; j++ ) {
-			size_t l = ( j + 3 ) % 3;
-			size_t m = ( j + 4 ) % 3;
-			size_t this_row = nSubTri(i,l); 
-			size_t this_col = nSubTri(i,m);
+	DictBase< int >::EdgeDict MyDict;
+	for( int i = 0; i < nSubTri.rows(); i++ ) {
+		for( int j = 0; j < 3; j++ ) {
+			int l = ( j + 3 ) % 3;
+			int m = ( j + 4 ) % 3;
+			int this_row = nSubTri(i,l); 
+			int this_col = nSubTri(i,m);
 			EdgePair EP = std::make_pair( std::min( this_row, this_col ), std::max( this_row, this_col ) );	
-			DictBase< size_t >::EdgeDict::const_iterator got = MyDict.find( EP );
+			DictBase< int >::EdgeDict::const_iterator got = MyDict.find( EP );
 			if( got == MyDict.end() ) {				// not found yet...
 				MyDict.insert( { EP, i } );			// i.e. the edge, and one of the triangles it belongs to.
 				tripletList.push_back( T( this_row, this_col, -1.0 ) );
@@ -73,7 +73,7 @@ std::tuple< SpMat, std::vector< size_t> > HSmoothMain::GraphLaplacian( trimesh& 
 		}
 	}
 
-	for( size_t i = 0; i < fDiagCount.size(); i++ )
+	for( int i = 0; i < fDiagCount.size(); i++ )
 		tripletList.push_back( T( i, i, fDiagCount[i] ) );
 
 	SpMat MLap( nUnique.size(), nUnique.size() );
@@ -83,3 +83,158 @@ std::tuple< SpMat, std::vector< size_t> > HSmoothMain::GraphLaplacian( trimesh& 
 }
 
 //============================================================================================
+
+meshnode HSmoothMain::Smooth( meshnode& NodesIn, std::string type, double fThresh, int nIter ) {
+	SpMat L = Laplacian2D( NodesIn.cols(), type );
+	std::vector< int > vidx;
+	if( type=="serial" )
+		vidx = std::vector< int >{ (int)0, (int)(L.cols()-1) };
+	else
+		vidx = std::vector< int >{};
+
+	matindex nFixed = HSmoothBase::getindex( vidx );
+	return Smooth( NodesIn, nFixed, L, fThresh, nIter );
+}
+
+//============================================================================================
+
+meshnode HSmoothMain::Smooth( meshnode& NodesIn, matindex& nFixed, SpMat& GL, double fThresh, int nIter ) {
+	matindex nMobile = HSmoothBase::getcomplement( nFixed, GL.cols() );	
+	if( nMobile.size() == 0 )
+		return NodesIn;
+
+	SpMat Data = NodesIn.transpose().sparseView();
+
+	SpMat GLRed, fConst, D, A, AyIn, yMobile, fSmallEye, LTL, LTK, yOut;
+
+	std::tuple< SpMat, SpMat > dbvp = GetDirichletBVP( GL, Data, nFixed, nMobile );
+	GLRed = std::get<0>( dbvp );
+	fConst = std::get<1>( dbvp );
+
+	std::tuple< SpMat, SpMat > pieces = AnalyzeLaplacian( GL );
+	D = std::get<0>( pieces );
+	A = std::get<1>( pieces );
+
+	AyIn = A * Data;
+	Eigen::MatrixXd mtemp = Eigen::MatrixXd::Zero( nMobile.size(), nMobile.size() );
+	mtemp.setIdentity();
+	fSmallEye = mtemp.sparseView();
+	fSmallEye.makeCompressed();
+	igl::slice( Data, nMobile, 1, yMobile );
+	LTL = SpMat( GLRed.transpose() * GLRed );
+	LTK = SpMat( GLRed.transpose() * fConst );	// casting as SpMat to make column-major
+	yOut = Data;
+
+	Smoother smth;
+
+	double fEps = 0.5;
+	double fStep = fEps / 2.0;
+	int nCount = 1;
+
+	double fobj1, fobj2, fslope;
+	fobj1 = GetObjFn( smth, fEps, fSmallEye, LTL, LTK, Data, nMobile, yMobile, D, AyIn, yOut ); 	// only the last parameter is actually modified
+	fobj2 = GetObjFn( smth, fEps+fThresh, fSmallEye, LTL, LTK, Data, nMobile, yMobile, D, AyIn, yOut );
+	fslope = ( fobj2 - fobj1 ) / fThresh;
+
+	while( fabs( fslope ) < fThresh && nCount < nIter ) {
+		if( fStep > 0.0 )
+			fEps -= fStep;
+		else
+			fEps += fStep;
+
+		fEps /= 2.0;
+		fobj1 = GetObjFn( smth, fEps, fSmallEye, LTL, LTK, Data, nMobile, yMobile, D, AyIn, yOut ); 	// only the last parameter is actually modified
+		fobj2 = GetObjFn( smth, fEps+fThresh, fSmallEye, LTL, LTK, Data, nMobile, yMobile, D, AyIn, yOut );
+		fslope = ( fobj2 - fobj1 ) / fThresh;
+		nCount++;
+	}
+
+	return Eigen::MatrixXd( yOut.transpose() );
+
+
+}
+
+//============================================================================================
+	
+std::tuple< SpMat, SpMat > HSmoothMain::GetDirichletBVP( SpMat& GL, SpMat& yIn, matindex& nFixed, matindex& nMobile ) {
+
+	matindex nAll = HSmoothBase::matunion( nFixed, nMobile );
+	std::vector< int > v;
+	for( int i = 0; i < yIn.cols(); i++ ) v.push_back( i );
+	matindex dims = HSmoothBase::getindex( v );
+
+//	SpMat GLRed, sm1, sm2, sm3, fConst;
+	SpMat	GLRed( nMobile.size(), nMobile.size() ), 
+			sm1( nAll.size(), nFixed.size() ), 
+			sm2( nFixed.size(), dims.size() ), 
+			sm3( nAll.size(), dims.size() ), 
+			fConst( nMobile.size(), dims.size() );
+	
+	igl::slice( GL, nMobile, nMobile, GLRed );		// thank goodness for igl::slice!
+	igl::slice( GL, nAll, nFixed, sm1 );
+	igl::slice( yIn, nFixed, dims, sm2 );
+	sm3 = sm1*sm2;
+	igl::slice( sm3, nMobile, dims, fConst );
+
+	return std::make_tuple( GLRed, fConst );
+}
+
+//============================================================================================
+
+std::tuple< SpMat, SpMat > HSmoothMain::AnalyzeLaplacian( SpMat& GL ) {	// NOTE: GL should be column-major
+
+	SpMat D( GL.rows(), GL.cols() ), A( GL.rows(), GL.cols() );
+	std::vector< T > DT, AT;
+	
+	for( int k = 0; k < GL.outerSize(); ++k ) {
+		for( SpMat::InnerIterator it( GL, k ); it; ++it ) {
+			if( it.value() < -0.5 )
+				AT.push_back( T( it.row(), it.col(), it.value() ) );
+			else if( it.value() > 0.5 )
+				DT.push_back( T( it.row(), it.col(), it.value() ) );
+		}
+	}
+	D.setFromTriplets( DT.begin(), DT.end() );
+	A.setFromTriplets( AT.begin(), AT.end() );
+
+	D.makeCompressed();
+	A.makeCompressed();
+
+	return std::make_tuple( D, A );
+	
+}
+
+//============================================================================================
+
+double HSmoothMain::GetObjFn( Smoother& smth, double feps, 
+		SpMat& fSmallEye, SpMat& LTL, SpMat& LTK, 
+		SpMat& Data, matindex& nMobile, SpMat& yMobile, 
+		SpMat& D, SpMat& AyIn, SpMat& yOut ) {
+
+	SpMat ySmooth; 
+	
+	SpMat A = ( 1.0 - feps )*fSmallEye	+ feps*LTL;
+	SpMat b = ( 1.0 - feps )*yMobile	- feps*LTK;
+
+	smth.compute( A );			// smth in general changes with each function call
+	ySmooth = smth.solve( b );
+
+	HSmoothBase::merge( ySmooth, yOut, nMobile );
+	Eigen::ArrayXXd yDeltaD = Eigen::MatrixXd( D*yOut + AyIn ).array();
+
+	return ( yDeltaD * yDeltaD ).sum();	// more efficient to calculate trace this way
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

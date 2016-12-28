@@ -8,10 +8,10 @@ LIB=hsmooth
 # Include paths
 MYLIB_PATH=.
 EIGEN_PATH=${HOME}/MyLibraries/Eigen
-IGL_PATH=${HOME}/MyLibriraies/libigl
+IGL_PATH=${HOME}/MyLibraries/libigl/include
 
 # Source files
-MYLIB_CPPS=Base.cpp HierarchicalSmooth.cpp Triangulation.cpp
+MYLIB_CPPS=Base.cpp HierarchicalSmooth.cpp Triangulation.cpp VolumeSolver.cpp
 
 ######################################
 # COMPILER AND FLAGS
@@ -28,7 +28,7 @@ OBJS = $(patsubst %.cpp, %.o, $(CPPS))
 INCL = -I. -I$(MYLIB_PATH) -I$(EIGEN_PATH) -I$(IGL_PATH)
 
 PRIMARY_FLAGS=-Wno-deprecated-declarations 
-OPTIMIZER_FLAGS= -O2 -ftree-vectorize -std=c++11 -fPIC
+OPTIMIZER_FLAGS= -O3 -std=c++11 -fPIC
 MY_LIBS=
 DEBUG_FLAGS=
 CFLAGS= ${PRIMARY_FLAGS} ${DEBUG_FLAGS} ${OPTIMIZER_FLAGS}

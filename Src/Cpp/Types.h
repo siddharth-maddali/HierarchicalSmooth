@@ -13,22 +13,23 @@
 
 #include "Eigen/Eigen"
 #include "Eigen/Sparse"
+#include "Eigen/IterativeLinearSolvers"
 
-// NOTE: 'size_t' is typedefed in iostream as unsigned long long, or something.
+// NOTE: 'int' is typedefed in iostream as unsigned long long, or something.
 
 /*
  * trimesh:
  * Eigen array of integer triplets; the prototype of Delaunay 
  * triangulations in this library.
  */
-typedef Eigen::Array< size_t, Eigen::Dynamic, 3 > trimesh;
+typedef Eigen::Array< int, Eigen::Dynamic, 3 > trimesh;
 
 /* 
  * meshnode:
- * Eigen arra yof float triplets, each column representing 
+ * Eigen array of float triplets, each column representing 
  * a 3D cartesian mesh node.
  */
-typedef Eigen::Array< double, 3, Eigen::Dynamic > meshnodes;
+typedef Eigen::Matrix< double, 3, Eigen::Dynamic > meshnode;
 
 /* 
  * facelabel:
@@ -36,7 +37,7 @@ typedef Eigen::Array< double, 3, Eigen::Dynamic > meshnodes;
  * and represents a grain boundary patch by specifying the 
  * grain IDs on either side of the patch. 
  */
-typedef Eigen::Array< size_t, Eigen::Dynamic, 2 > facelabels;
+typedef Eigen::Array< int, Eigen::Dynamic, 2 > facelabel;
 
 /*
  * nodetype:
@@ -45,7 +46,7 @@ typedef Eigen::Array< size_t, Eigen::Dynamic, 2 > facelabels;
  * ( denoted by 2, 3, 4 respectively if on the interior and 
  * 12, 13, 14 if on the volume surface.
  */
-typedef Eigen::Array< size_t, Eigen::Dynamic, 1 > nodetype;
+typedef Eigen::Array< int, Eigen::Dynamic, 1 > nodetype;
 
 /*
  * is_smoothed:
@@ -59,8 +60,10 @@ typedef Eigen::Array< bool, Eigen::Dynamic, 1 > is_smoothed;
  * matindex:
  * Special typedef of an Eigen vector of integers to indicate
  * an array of indices, to be used in slicing with libigl.
+ * Also, need to set data type int and not int because of 
+ * compatibility with libigl.
  */
-typedef Eigen::Matrix< size_t, Eigen::Dynamic, 1 > matindex;
+typedef Eigen::Matrix< int, Eigen::Dynamic, 1 > matindex;
 
 
 
@@ -69,7 +72,7 @@ typedef Eigen::Matrix< size_t, Eigen::Dynamic, 1 > matindex;
  * Bookkeeping devices for edges in a Delaunay mesh, each 
  * edge being represented by an ordered pair of integers.
  */
-typedef std::pair< size_t, size_t > EdgePair;
+typedef std::pair< int, int > EdgePair;
 typedef std::vector< EdgePair > EdgeList;
 
 /*
@@ -92,7 +95,8 @@ struct DictBase {
  */
 
 
-/* SpMat:
+/* 
+ * SpMat:
  * Shorthand for Eigen's sparse matrix type.
  *
  * T:
@@ -100,8 +104,21 @@ struct DictBase {
  * a single sparse matrix element (i, j ) and 
  * the floating point value at that position.
  * Defined in Eigen/Sparse
+ *
+ * SpMatMask:
+ * Boolean mask for type SpMat
+ *
+ * bT:
+ * Equivalent of T for boolean variables.
  */
 typedef Eigen::SparseMatrix<double>	SpMat;
 typedef Eigen::Triplet<double>		T;
+typedef Eigen::SparseMatrix< bool > SpMatMask;
+typedef Eigen::Triplet< bool >		bT;
+
+/*
+ * Typedef for the conjugate gradient solver for sparse systems.
+ */
+typedef Eigen::ConjugateGradient< SpMat, Eigen::Upper|Eigen::Lower > Smoother;
 
 #endif

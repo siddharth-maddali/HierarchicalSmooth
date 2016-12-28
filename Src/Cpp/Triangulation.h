@@ -19,7 +19,7 @@
 struct EdgeCount {
 	EdgePair orig_pair;
 	int ncount;
-	EdgeCount( size_t x, size_t y ) {
+	EdgeCount( int x, int y ) {
 		orig_pair = std::make_pair( x, y );
 		ncount = 1;		// i.e. one edge already found at time of instantiation.
 	}
@@ -40,7 +40,7 @@ namespace HSmoothTri {
 		// member objects
 		trimesh Mesh, nSubTri;				// the Delaunay triangulation from which everything is derived
 		EdgeList edge_list, free_boundary, free_boundary_segments;
-		std::vector< size_t > nUnique;
+		std::vector< int > nUnique;
 		DictBase< EdgeCount >::EdgeDict MyDict;
 		std::vector< double > fDiagCount;
 

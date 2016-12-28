@@ -16,8 +16,13 @@
 #include "Types.h"
 #include "Base.h"
 #include "Triangulation.h"
+#include "HierarchicalSmooth.h"
 
 #include "igl/slice.h"	// for slicing operations on Eigen matrix types
+
+namespace base 		= HSmoothBase;
+namespace smooth	= HSmoothMain;
+namespace tri		= HSmoothTri;
 
 namespace VolumeSolver {
 
@@ -25,18 +30,18 @@ namespace VolumeSolver {
 	
 		public:
 		// constructor
-		VolumeSolver( trimesh&, meshnode&,facelabel&, nodetype&, size_t=53 );
+		VolumeSolver( trimesh&, meshnode&,facelabel&, nodetype&, int=53 );
 			// the last integer default is the number of bisections in each call
 			// to the core smoothing routine. Obtained from a typical machine 
 			// zero value of ~10^16.
 
 		// smoother
-		bool HierarchicalSmooth( 
+		meshnode HierarchicalSmooth( 
 			bool=false, std::string="Smooth.Default.log"
 		);
 
 		// writer
-		meshnode GetSmoothed( void ) { return vsNodeSmooth };
+		meshnode GetSmoothed( void ) { return vsNodeSmooth; }
 
 		private:
 		// member objects; all these are instantiated in the constructor
@@ -46,11 +51,15 @@ namespace VolumeSolver {
 		facelabel vsLabel;
 		nodetype vsType;
 		int MaxIterations;
-		std::fstream fout;	// log file handle
-		Dictbase< std::vector< size_t > >::EdgeDict vsBoundaryDict;
+		std::ofstream fout;	// log file handle
+		DictBase< std::vector< int > >::EdgeDict vsBoundaryDict;
+		void MarkSectionAsComplete( matindex& );
 
 		// member functions
-		trimesh SliceMesh( std::vector< size_t >& );
+		trimesh SliceMesh( std::vector< int >& );
+
+		//scratch
+		matindex one, three;
 
 	};
 
