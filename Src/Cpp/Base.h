@@ -22,9 +22,11 @@ namespace HSmoothBase{
 
 /* getindex:
  * Returns a matindex object (defined in Types.h) of integers given an 
- * STL std::vector< int > object;
+ * STL std::vector< int > object. Variant returns position of each integer 
+ * with respect to a user-supplied matindex.
  */
 	matindex getindex( std::vector< int >& );
+	matindex getindex( std::vector< int >&, matindex& );
 
 /* getcomplement:
  * Given a matindex M and an integer N > max( M ), returns a matindex containing 

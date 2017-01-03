@@ -22,7 +22,7 @@ VolumeSolver::VolumeSolver::VolumeSolver(
 
 	Status = is_smoothed( vsType.size() );
 	for( int i = 0; i < vsType.size(); i++ )
-		Status( i ) = ( vsType(i) % 4 == 0 );	// smoothed is quad jn
+		Status( i ) = ( vsType(i) % 10 == 4 );	// quad jn points considered already smoothed.
 
 	std::vector< int > vtemp{ 0, 1, 2 };
 	std::vector< int > vtemp2{ 0 };
@@ -30,14 +30,27 @@ VolumeSolver::VolumeSolver::VolumeSolver(
 	one = base::getindex( vtemp2 );
 	three = base::getindex( vtemp );
 
-	vsNodeSmooth = meshnode::Zero( 3, vsNode.cols() );
+	vsNodeSmooth = vsNode;
 
-	// Filling in boundary dictionary
-	for( int i = 0; i <  vsLabel.rows(); i++ ) {
-		EdgePair this_pair = std::make_pair(  
-			std::min( vsLabel( i, 0 ), vsLabel( i, 1 ) ), 
-			std::max( vsLabel( i, 0 ), vsLabel( i, 1 ) )
+	fError = ( vsNode.col( vsMesh( 0, 0 ) ).array() - vsNode.col( vsMesh( 0, 1 ) ).array() ).matrix().norm();
+	fError = std::min( fError, 
+			( vsNode.col( vsMesh( 0, 1 ) ).array() - vsNode.col( vsMesh( 0, 2 ) ).array() ).matrix().norm()
 		);
+	fError = sqrt( 3.0 * fError * fError );
+	fErrorThreshold = 2.0;
+	
+	// Filling in boundary dictionary. This also takes care of 
+	// flipping the direction of a mesh element as computed by 
+	// Dream.3d so that every element has the same hendedness.
+	for( int i = 0; i <  vsLabel.rows(); i++ ) {
+		int this_min = std::min( vsLabel( i, 0 ), vsLabel( i, 1 ) );
+		int this_max = std::max( vsLabel( i, 0 ), vsLabel( i, 1 ) );
+		if( vsLabel( i, 0 ) == this_min )  {	// this line ensures consistent handedness for entire surface
+			int temp = vsMesh( i, 0 );
+			vsMesh( i, 0 ) = vsMesh( i, 1 );
+			vsMesh( i, 1 ) = temp;
+		}
+		EdgePair this_pair = std::make_pair( this_min, this_max );
 		DictBase< std::vector< int > >::EdgeDict::iterator got = vsBoundaryDict.find( this_pair );
 		if( got == vsBoundaryDict.end() ) {		// new boundary, new dictionary entry
 			std::vector< int > v;
@@ -57,20 +70,21 @@ meshnode VolumeSolver::VolumeSolver::HierarchicalSmooth( bool logging, std::stri
 	fout.open( logfile.c_str() );
 	std::ostream& outfile = ( logging ? fout : std::cout );
 
+	int ncount = 1;
+
 	for( 
 		DictBase< std::vector< int > >::EdgeDict::iterator it = vsBoundaryDict.begin(); 
 		it != vsBoundaryDict.end(); 
 		++it 
 	) {
+//		outfile << "Boundary " << ncount<< " of " << vsBoundaryDict.size() << '\n';
 		trimesh triSub = SliceMesh( it->second );
 		tri::Triangulation T( triSub );
 		
 		std::tuple< SpMat, matindex > Topology = T.GraphLaplacian();
 	 	SpMat GL = std::get<0>( Topology );
 		matindex nUniq = std::get<1>( Topology );
-		meshnode BoundaryNode;
-		igl::slice( vsNode, three, nUniq, BoundaryNode );
-
+		
 		std::tuple< EdgeList, EdgeList > FreeBndData = T.freeBoundary();
 		EdgeList FB = std::get<0>( FreeBndData );
 		EdgeList fbsec = std::get<1>( FreeBndData );
@@ -79,45 +93,73 @@ meshnode VolumeSolver::VolumeSolver::HierarchicalSmooth( bool logging, std::stri
 			int start, stop, count;
 			start = std::get<0>( fbsec[i] );
 			stop = std::get<1>( fbsec[i] );
-			count = start;
-			while( count <= stop && Status( nUniq( std::get<0>( FB[ count ] ) ) ) == false )
-				count++;
+			for( count = start; count <= stop; count++ ) 
+				if( vsType( std::get<0>( FB[ count ] ) ) % 10 == 4 )
+					break;
+			std::vector< int > vtemp;
 			if( count > stop ) {	// no quad jns in this free boundary. smooth without constraints and get out.
-				meshnode BoundaryNodeSmooth = smooth::Smooth( BoundaryNode, std::string( "cyclic" ) );
-				for( int i = 0; i < nUniq.size(); i++ )
-					vsNodeSmooth.col( nUniq( i ) ) << BoundaryNodeSmooth.col( i );
-				MarkSectionAsComplete( nUniq );
+				for( count = start; count <= stop; count++ ) vtemp.push_back( std::get<0>( FB[ count ] ) );
+				matindex thisFreeBoundaryIdx = base::getindex( vtemp );
+				meshnode thisFreeBoundary;
+				igl::slice( vsNodeSmooth, three, thisFreeBoundaryIdx, thisFreeBoundary );
+				meshnode thisFreeBoundarySmooth = smooth::Smooth( thisFreeBoundary, std::string( "cyclic" ) );
+				base::merge( thisFreeBoundarySmooth, vsNodeSmooth, thisFreeBoundaryIdx );
+				MarkSectionAsComplete( thisFreeBoundaryIdx );
 			}
 			else {					// triple line sections found; smooth separately.
-				std::vector< int > vtemp;
-				vtemp.push_back( count );
+				vtemp.push_back( std::get<0>( FB[ count ] ) );
 				int thissize = 1 + ( stop - start );
-				for( int j = count+1; j < count + thissize; j++ ) {
+				for( int j = count+1; j < 1 + count + thissize; j++ ) {
 					int effective_j = j % thissize;
-					vtemp.push_back( effective_j );
-					if( vsType( nUniq( std::get<0>( FB[ effective_j ] ) ) ) % 4 == 0 ) {	// reached terminal quad point
+					vtemp.push_back( std::get<0>( FB[ effective_j ] ) );
+					if( vsType( std::get<0>( FB[ effective_j ] ) ) % 10 == 4 ) {	// reached terminal quad point
 						matindex thisTripleLineIndex = base::getindex( vtemp );
-						
-						matindex temp1;
-						is_smoothed temp2;
-						igl::slice( nUniq, thisTripleLineIndex, one, temp1 );
-						igl::slice( Status, temp1, one, temp2 );
-
-						if( !temp2.all() ) {
+						is_smoothed thisStatus;
+						igl::slice( Status, thisTripleLineIndex, one, thisStatus );
+						if( !thisStatus.all() ) {
 							meshnode thisTripleLine, thisTripleLineSmoothed; 
-							igl::slice( BoundaryNode, three, thisTripleLineIndex, thisTripleLine );
+							igl::slice( vsNodeSmooth, three, thisTripleLineIndex, thisTripleLine );
 							thisTripleLineSmoothed = smooth::Smooth( thisTripleLine );
-							MarkSectionAsComplete( temp1 );
+							base::merge( thisTripleLineSmoothed, vsNodeSmooth, thisTripleLineIndex ); /* HAVEN'T CHECKED FOR BUGS */
+							MarkSectionAsComplete( thisTripleLineIndex );
 						}
 						vtemp.clear();
-						vtemp.push_back( effective_j );
+						vtemp.push_back( std::get<0>( FB[ effective_j] ) );
 					}
 				}
 			}
 		}
+		// NOW, smooth entire boundary subject to fixed triple points.
+		meshnode BoundaryNode;
+		igl::slice( vsNodeSmooth, three, nUniq, BoundaryNode );
+		std::vector< int > fixed; 
+		for( int i = 0; i < FB.size(); i++ ) fixed.push_back( std::get<0>( FB[i] ) );
+		matindex nFixed = base::getindex( fixed, nUniq );
+		meshnode BoundaryNodeSmooth = smooth::Smooth( BoundaryNode, nFixed, GL );
+		base::merge( BoundaryNodeSmooth, vsNodeSmooth, nUniq );
+		MarkSectionAsComplete( nUniq );
+		ncount++;
+	// Done. Get out.
+	}
+	
+	Eigen::ArrayXXd fTemp = vsNodeSmooth.array() - vsNode.array();
+	Eigen::ArrayXXd fNorm = ( fTemp * fTemp ).colwise().sum().sqrt() / fError;
+	if( ( fNorm > fErrorThreshold ).any() ) {
+		for( int i = 0; i < Status.rows(); i++ )
+			if( fNorm( 0, i ) > fErrorThreshold ) {
+				Status( i, 0 ) = false;
+				vsNodeSmooth.col( i ) << vsNode.col( i );	// reset to old values.
+			}
 	}
 
-	outfile << "Done smoothing volume. " << '\n';
+	if( !Status.all() ) 
+		outfile 	<< "WARNING: " 
+					<< ( fNorm > fErrorThreshold ).count() << " of " 
+					<< vsNodeSmooth.cols() << " nodes not smoothed. " 
+					<< "Query VolumeSolver::Status for more information. "
+					<< '\n';
+	else
+		outfile << "All nodes smoothed. " << '\n';
 	fout.close();
 	return vsNodeSmooth;
 }

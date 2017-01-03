@@ -30,15 +30,15 @@ namespace VolumeSolver {
 	
 		public:
 		// constructor
-		VolumeSolver( trimesh&, meshnode&,facelabel&, nodetype&, int=53 );
+		VolumeSolver( trimesh&, meshnode&, facelabel&, nodetype&, int=53 );
 			// the last integer default is the number of bisections in each call
 			// to the core smoothing routine. Obtained from a typical machine 
-			// zero value of ~10^16.
+			// zero value of ~10^16. 
+			// TODO: Generalize this to work for machine zero of the specific 
+			// machine in use.
 
 		// smoother
-		meshnode HierarchicalSmooth( 
-			bool=false, std::string="Smooth.Default.log"
-		);
+		meshnode HierarchicalSmooth( bool=false, std::string="Smooth.Default.log" );
 
 		// writer
 		meshnode GetSmoothed( void ) { return vsNodeSmooth; }
@@ -51,12 +51,14 @@ namespace VolumeSolver {
 		facelabel vsLabel;
 		nodetype vsType;
 		int MaxIterations;
+		double fError, fErrorThreshold;
 		std::ofstream fout;	// log file handle
 		DictBase< std::vector< int > >::EdgeDict vsBoundaryDict;
-		void MarkSectionAsComplete( matindex& );
+
 
 		// member functions
 		trimesh SliceMesh( std::vector< int >& );
+		void MarkSectionAsComplete( matindex& );
 
 		//scratch
 		matindex one, three;

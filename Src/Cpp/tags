@@ -41,12 +41,15 @@ connectivityList	Triangulation.cpp	/^trimesh HSmoothTri::Triangulation::connecti
 differentiateFaces	Triangulation.cpp	/^void HSmoothTri::Triangulation::differentiateFaces( void ) {$/;"	f	class:HSmoothTri::Triangulation
 edge_list	Triangulation.h	/^		EdgeList edge_list, free_boundary, free_boundary_segments;$/;"	m	class:HSmoothTri::Triangulation
 fDiagCount	Triangulation.h	/^		std::vector< double > fDiagCount;$/;"	m	class:HSmoothTri::Triangulation
+fError	VolumeSolver.h	/^		double fError, fErrorThreshold;$/;"	m	class:VolumeSolver::VolumeSolver
+fErrorThreshold	VolumeSolver.h	/^		double fError, fErrorThreshold;$/;"	m	class:VolumeSolver::VolumeSolver
 fout	VolumeSolver.h	/^		std::ofstream fout;	\/\/ log file handle$/;"	m	class:VolumeSolver::VolumeSolver
 freeBoundary	Triangulation.cpp	/^std::tuple< EdgeList, EdgeList > HSmoothTri::Triangulation::freeBoundary( void ) {$/;"	f	class:HSmoothTri::Triangulation
 free_boundary	Triangulation.h	/^		EdgeList edge_list, free_boundary, free_boundary_segments;$/;"	m	class:HSmoothTri::Triangulation
 free_boundary_segments	Triangulation.h	/^		EdgeList edge_list, free_boundary, free_boundary_segments;$/;"	m	class:HSmoothTri::Triangulation
 getcomplement	Base.cpp	/^matindex HSmoothBase::getcomplement( matindex& nSet, int N ) {$/;"	f	class:HSmoothBase
 getindex	Base.cpp	/^matindex HSmoothBase::getindex( std::vector< int >& FromThis ) {$/;"	f	class:HSmoothBase
+getindex	Base.cpp	/^matindex HSmoothBase::getindex( std::vector< int >& FromThis, matindex& InThis ) {$/;"	f	class:HSmoothBase
 ismember	Base.cpp	/^trimesh HSmoothBase::ismember( trimesh& Array1, std::vector<int>& Array2 ) {$/;"	f	class:HSmoothBase
 matunion	Base.cpp	/^matindex HSmoothBase::matunion( matindex& mat1,  matindex& mat2 ) {$/;"	f	class:HSmoothBase
 merge	Base.cpp	/^void HSmoothBase::merge( SpMat& Source, SpMat& Target, matindex& Locations ) {$/;"	f	class:HSmoothBase

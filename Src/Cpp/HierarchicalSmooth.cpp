@@ -91,7 +91,6 @@ meshnode HSmoothMain::Smooth( meshnode& NodesIn, std::string type, double fThres
 		vidx = std::vector< int >{ (int)0, (int)(L.cols()-1) };
 	else
 		vidx = std::vector< int >{};
-
 	matindex nFixed = HSmoothBase::getindex( vidx );
 	return Smooth( NodesIn, nFixed, L, fThresh, nIter );
 }
@@ -216,10 +215,12 @@ double HSmoothMain::GetObjFn( Smoother& smth, double feps,
 	SpMat A = ( 1.0 - feps )*fSmallEye	+ feps*LTL;
 	SpMat b = ( 1.0 - feps )*yMobile	- feps*LTK;
 
+
 	smth.compute( A );			// smth in general changes with each function call
 	ySmooth = smth.solve( b );
 
 	HSmoothBase::merge( ySmooth, yOut, nMobile );
+
 	Eigen::ArrayXXd yDeltaD = Eigen::MatrixXd( D*yOut + AyIn ).array();
 
 	return ( yDeltaD * yDeltaD ).sum();	// more efficient to calculate trace this way

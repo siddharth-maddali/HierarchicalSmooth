@@ -38,6 +38,19 @@ matindex HSmoothBase::getindex( std::vector< int >& FromThis ) {
 
 //============================================================================================
 
+matindex HSmoothBase::getindex( std::vector< int >& FromThis, matindex& InThis ) {
+	std::unordered_map< int, int > dict;
+	for( int i = 0; i < InThis.rows(); i++ ) dict.insert( { InThis( i ), i } );
+	std::vector< int > vtemp;
+	for( int i = 0; i < FromThis.size(); i++ ) {
+		std::unordered_map< int, int >::iterator got = dict.find( FromThis[i] );
+		vtemp.push_back( got->second );
+	}
+	return getindex( vtemp );
+}
+
+//============================================================================================
+
 matindex HSmoothBase::getcomplement( matindex& nSet, int N ) {
 	matindex nAll = -1 * matindex::Ones( N, 1 );
 	for( int i = 0; i < nSet.size(); i++ )
@@ -64,18 +77,19 @@ matindex HSmoothBase::matunion( matindex& mat1,  matindex& mat2 ) {
 //============================================================================================
 
 void HSmoothBase::merge( meshnode& Source, meshnode& Target, matindex& Locations ) {
-	for( int i = 0; i < Source.rows(); i++ )
-		Target.row( Locations( i ) ) << Source.row( i );
+	for( int i = 0; i < Source.cols(); i++ )
+		Target.col( Locations( i ) ) << Source.col( i );
 	return;
 }
 
 //============================================================================================
 
 void HSmoothBase::merge( SpMat& Source, SpMat& Target, matindex& Locations ) {
-	meshnode src = Eigen::MatrixXd( Source );
-	meshnode trg = Eigen::MatrixXd( Target );
+	meshnode src = Eigen::MatrixXd( Source ).transpose();
+	meshnode trg = Eigen::MatrixXd( Target ).transpose();
 	merge( src, trg, Locations );
-	Target = trg.sparseView();
+
+	Target = trg.transpose().sparseView();
 	Target.makeCompressed();
 	return;
 }
