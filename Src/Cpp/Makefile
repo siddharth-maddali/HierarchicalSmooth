@@ -7,8 +7,8 @@ LIB=hsmooth
 
 # Include paths
 MYLIB_PATH=.
-EIGEN_PATH=${HOME}/MyLibraries/Eigen
-IGL_PATH=${HOME}/MyLibraries/libigl/include
+EIGEN_PATH=./Eigen
+IGL_PATH=./libigl/include
 
 # Source files
 MYLIB_CPPS=Base.cpp HierarchicalSmooth.cpp Triangulation.cpp VolumeSolver.cpp

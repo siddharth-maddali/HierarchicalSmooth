@@ -1,5 +1,7 @@
-Src/Cpp/TestSuite/*
-Untracked/*
+Src/Cpp/Eigen
+Src/Cpp/libigl
+Src/Cpp/TestSuite
+Untracked
 *.pdf	
 *.mex*
 *.a

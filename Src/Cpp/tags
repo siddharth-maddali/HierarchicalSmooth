@@ -10,6 +10,7 @@ EdgeCount	Triangulation.h	/^struct EdgeCount {$/;"	s
 FastChainLinkSort	Triangulation.cpp	/^EdgeList HSmoothTri::Triangulation::FastChainLinkSort( EdgeList& inList ) {$/;"	f	class:HSmoothTri::Triangulation
 GetDirichletBVP	HierarchicalSmooth.cpp	/^std::tuple< SpMat, SpMat > HSmoothMain::GetDirichletBVP( SpMat& GL, SpMat& yIn, matindex& nFixed, matindex& nMobile ) {$/;"	f	class:HSmoothMain
 GetEdges	Triangulation.cpp	/^std::tuple< EdgeList, EdgeList > HSmoothTri::Triangulation::GetEdges( trimesh& inTri ) {$/;"	f	class:HSmoothTri::Triangulation
+GetNodeSmoothStatus	VolumeSolver.h	/^		is_smoothed GetNodeSmoothStatus( void ) {return Status; }$/;"	f	class:VolumeSolver::VolumeSolver
 GetObjFn	HierarchicalSmooth.cpp	/^double HSmoothMain::GetObjFn( Smoother& smth, double feps, $/;"	f	class:HSmoothMain
 GetSmoothed	VolumeSolver.h	/^		meshnode GetSmoothed( void ) { return vsNodeSmooth; }$/;"	f	class:VolumeSolver::VolumeSolver
 GraphLaplacian	HierarchicalSmooth.cpp	/^std::tuple< SpMat, std::vector< int> > HSmoothMain::GraphLaplacian( trimesh& tri ) { $/;"	f	class:HSmoothMain
@@ -32,10 +33,10 @@ Triangulation	Triangulation.h	/^	class Triangulation {$/;"	c	namespace:HSmoothTr
 VolumeSolver	VolumeSolver.cpp	/^VolumeSolver::VolumeSolver::VolumeSolver( $/;"	f	class:VolumeSolver::VolumeSolver
 VolumeSolver	VolumeSolver.h	/^	class VolumeSolver {$/;"	c	namespace:VolumeSolver
 VolumeSolver	VolumeSolver.h	/^namespace VolumeSolver {$/;"	n
-_HSMOOTH_BASE	Base.h	8;"	d
-_HSMOOTH_HSMOOTH	HierarchicalSmooth.h	9;"	d
-_HSMOOTH_TRI	Triangulation.h	13;"	d
-_HSMOOTH_VOLSOLVER	VolumeSolver.h	9;"	d
+_HSMOOTH_BASE	Base.h	34;"	d
+_HSMOOTH_HSMOOTH	HierarchicalSmooth.h	35;"	d
+_HSMOOTH_TRI	Triangulation.h	39;"	d
+_HSMOOTH_VOLSOLVER	VolumeSolver.h	35;"	d
 allEdges	Triangulation.cpp	/^EdgeList HSmoothTri::Triangulation::allEdges( void ) {$/;"	f	class:HSmoothTri::Triangulation
 connectivityList	Triangulation.cpp	/^trimesh HSmoothTri::Triangulation::connectivityList( void ) {$/;"	f	class:HSmoothTri::Triangulation
 differentiateFaces	Triangulation.cpp	/^void HSmoothTri::Triangulation::differentiateFaces( void ) {$/;"	f	class:HSmoothTri::Triangulation
