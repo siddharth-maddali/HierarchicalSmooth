@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2017, Siddharth Maddali 
+// Copyright (c) 2016-2018, Siddharth Maddali 
 // All rights reserved. 
 // 
 // Redistribution and use in source and binary forms, with or without 
@@ -55,25 +55,26 @@ namespace HSmoothTri {
 
 	class Triangulation {
 		public:
-		Triangulation( trimesh& );			// not taking points for now; this will come later.
-
-		trimesh connectivityList( void );
-		EdgeList allEdges( void );
-		std::tuple< EdgeList, EdgeList > freeBoundary( void );		// in proper winding order!
-		std::tuple< SpMat, matindex > GraphLaplacian( void );
+			Triangulation() {}					// default constructor
+			Triangulation( trimesh& );			// not taking points for now; this will come later.
+				
+			trimesh connectivityList( void );
+			EdgeList allEdges( void );
+			std::tuple< EdgeList, EdgeList > freeBoundary( void );		// in proper winding order!
+			std::tuple< SpMat, matindex > GraphLaplacian( void );
 
 		private:
-		// member objects
-		trimesh Mesh, nSubTri;				// the Delaunay triangulation from which everything is derived
-		EdgeList edge_list, free_boundary, free_boundary_segments;
-		std::vector< int > nUnique;
-		DictBase< EdgeCount >::EdgeDict MyDict;
-		std::vector< double > fDiagCount;
-
-		// member functions
-		std::tuple< EdgeList, EdgeList > GetEdges( trimesh& );
-		EdgeList FastChainLinkSort( EdgeList& );
-		void differentiateFaces( void );
+			// member objects
+			trimesh Mesh, nSubTri;				// the Delaunay triangulation from which everything is derived
+			EdgeList edge_list, free_boundary, free_boundary_segments;
+			std::vector< int > nUnique;
+			DictBase< EdgeCount >::EdgeDict MyDict;
+			std::vector< double > fDiagCount;
+	
+			// member functions
+			std::tuple< EdgeList, EdgeList > GetEdges( trimesh& );
+			EdgeList FastChainLinkSort( EdgeList& );
+			void differentiateFaces( void );
 
 	};
 }
