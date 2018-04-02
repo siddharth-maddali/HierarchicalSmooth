@@ -9,6 +9,7 @@ LIB=hsmooth
 MYLIB_PATH=.
 EIGEN_PATH=./Eigen
 IGL_PATH=./libigl/include
+BOOST_PATH=./boost
 
 # Source files
 MYLIB_CPPS=Base.cpp HierarchicalSmooth.cpp Triangulation.cpp VolumeSolver.cpp
@@ -19,13 +20,13 @@ MYLIB_CPPS=Base.cpp HierarchicalSmooth.cpp Triangulation.cpp VolumeSolver.cpp
 
 CPPS=$(patsubst %.cpp, $(MYLIB_PATH)/%.cpp, $(MYLIB_CPPS) )\
 		$(patsubst %.cpp, $(EIGEN_PATH)/%.cpp, $(EIGEN_CPPS) )\
-		$(patsubst %.cpp, $(PROJ_PATH)/%.cpp, $(PROJ_CPPS) )
+		$(patsubst %.cpp, $(BOOST_PATH)/%.cpp, $(EIGEN_CPPS) )
 
 HEADER_FILES=$(patsubst %.cpp, %.h, $(MYLIB_CPPS) )
 
 OBJS = $(patsubst %.cpp, %.o, $(CPPS))
 
-INCL = -I. -I$(MYLIB_PATH) -I$(EIGEN_PATH) -I$(IGL_PATH)
+INCL = -I. -I$(MYLIB_PATH) -I$(EIGEN_PATH) -I$(IGL_PATH) -I$(BOOST_PATH)
 
 PRIMARY_FLAGS=-Wno-deprecated-declarations 
 OPTIMIZER_FLAGS= -O3 -std=c++11 -fPIC

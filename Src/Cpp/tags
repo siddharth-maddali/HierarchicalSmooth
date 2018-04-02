@@ -22,13 +22,14 @@ HierarchicalSmooth	VolumeSolver.cpp	/^meshnode VolumeSolver::VolumeSolver::Hiera
 Laplacian2D	HierarchicalSmooth.cpp	/^SpMat HSmoothMain::Laplacian2D( int N, std::string type ) {$/;"	f	class:HSmoothMain
 MarkSectionAsComplete	VolumeSolver.cpp	/^void VolumeSolver::VolumeSolver::MarkSectionAsComplete( matindex& idx ) {$/;"	f	class:VolumeSolver::VolumeSolver
 MaxIterations	VolumeSolver.h	/^		int MaxIterations;$/;"	m	class:VolumeSolver::VolumeSolver
-Mesh	Triangulation.h	/^		trimesh Mesh, nSubTri;				\/\/ the Delaunay triangulation from which everything is derived$/;"	m	class:HSmoothTri::Triangulation
-MyDict	Triangulation.h	/^		DictBase< EdgeCount >::EdgeDict MyDict;$/;"	m	class:HSmoothTri::Triangulation
+Mesh	Triangulation.h	/^			trimesh Mesh, nSubTri;				\/\/ the Delaunay triangulation from which everything is derived$/;"	m	class:HSmoothTri::Triangulation
+MyDict	Triangulation.h	/^			DictBase< EdgeCount >::EdgeDict MyDict;$/;"	m	class:HSmoothTri::Triangulation
 SliceMesh	VolumeSolver.cpp	/^trimesh VolumeSolver::VolumeSolver::SliceMesh( std::vector< int >& FromThesePatches ) {$/;"	f	class:VolumeSolver::VolumeSolver
 Smooth	HierarchicalSmooth.cpp	/^meshnode HSmoothMain::Smooth( meshnode& NodesIn, matindex& nFixed, SpMat& GL, double fThresh, int nIter ) {$/;"	f	class:HSmoothMain
 Smooth	HierarchicalSmooth.cpp	/^meshnode HSmoothMain::Smooth( meshnode& NodesIn, std::string type, double fThresh, int nIter ) {$/;"	f	class:HSmoothMain
 Status	VolumeSolver.h	/^		is_smoothed Status;$/;"	m	class:VolumeSolver::VolumeSolver
 Triangulation	Triangulation.cpp	/^HSmoothTri::Triangulation::Triangulation( trimesh& inTri ) {$/;"	f	class:HSmoothTri::Triangulation
+Triangulation	Triangulation.h	/^			Triangulation() {}					\/\/ default constructor$/;"	f	class:HSmoothTri::Triangulation
 Triangulation	Triangulation.h	/^	class Triangulation {$/;"	c	namespace:HSmoothTri
 VolumeSolver	VolumeSolver.cpp	/^VolumeSolver::VolumeSolver::VolumeSolver( $/;"	f	class:VolumeSolver::VolumeSolver
 VolumeSolver	VolumeSolver.h	/^	class VolumeSolver {$/;"	c	namespace:VolumeSolver
@@ -40,14 +41,14 @@ _HSMOOTH_VOLSOLVER	VolumeSolver.h	35;"	d
 allEdges	Triangulation.cpp	/^EdgeList HSmoothTri::Triangulation::allEdges( void ) {$/;"	f	class:HSmoothTri::Triangulation
 connectivityList	Triangulation.cpp	/^trimesh HSmoothTri::Triangulation::connectivityList( void ) {$/;"	f	class:HSmoothTri::Triangulation
 differentiateFaces	Triangulation.cpp	/^void HSmoothTri::Triangulation::differentiateFaces( void ) {$/;"	f	class:HSmoothTri::Triangulation
-edge_list	Triangulation.h	/^		EdgeList edge_list, free_boundary, free_boundary_segments;$/;"	m	class:HSmoothTri::Triangulation
-fDiagCount	Triangulation.h	/^		std::vector< double > fDiagCount;$/;"	m	class:HSmoothTri::Triangulation
+edge_list	Triangulation.h	/^			EdgeList edge_list, free_boundary, free_boundary_segments;$/;"	m	class:HSmoothTri::Triangulation
+fDiagCount	Triangulation.h	/^			std::vector< double > fDiagCount;$/;"	m	class:HSmoothTri::Triangulation
 fError	VolumeSolver.h	/^		double fError, fErrorThreshold;$/;"	m	class:VolumeSolver::VolumeSolver
 fErrorThreshold	VolumeSolver.h	/^		double fError, fErrorThreshold;$/;"	m	class:VolumeSolver::VolumeSolver
 fout	VolumeSolver.h	/^		std::ofstream fout;	\/\/ log file handle$/;"	m	class:VolumeSolver::VolumeSolver
 freeBoundary	Triangulation.cpp	/^std::tuple< EdgeList, EdgeList > HSmoothTri::Triangulation::freeBoundary( void ) {$/;"	f	class:HSmoothTri::Triangulation
-free_boundary	Triangulation.h	/^		EdgeList edge_list, free_boundary, free_boundary_segments;$/;"	m	class:HSmoothTri::Triangulation
-free_boundary_segments	Triangulation.h	/^		EdgeList edge_list, free_boundary, free_boundary_segments;$/;"	m	class:HSmoothTri::Triangulation
+free_boundary	Triangulation.h	/^			EdgeList edge_list, free_boundary, free_boundary_segments;$/;"	m	class:HSmoothTri::Triangulation
+free_boundary_segments	Triangulation.h	/^			EdgeList edge_list, free_boundary, free_boundary_segments;$/;"	m	class:HSmoothTri::Triangulation
 getcomplement	Base.cpp	/^matindex HSmoothBase::getcomplement( matindex& nSet, int N ) {$/;"	f	class:HSmoothBase
 getindex	Base.cpp	/^matindex HSmoothBase::getindex( std::vector< int >& FromThis ) {$/;"	f	class:HSmoothBase
 getindex	Base.cpp	/^matindex HSmoothBase::getindex( std::vector< int >& FromThis, matindex& InThis ) {$/;"	f	class:HSmoothBase
@@ -55,8 +56,8 @@ ismember	Base.cpp	/^trimesh HSmoothBase::ismember( trimesh& Array1, std::vector<
 matunion	Base.cpp	/^matindex HSmoothBase::matunion( matindex& mat1,  matindex& mat2 ) {$/;"	f	class:HSmoothBase
 merge	Base.cpp	/^void HSmoothBase::merge( SpMat& Source, SpMat& Target, matindex& Locations ) {$/;"	f	class:HSmoothBase
 merge	Base.cpp	/^void HSmoothBase::merge( meshnode& Source, meshnode& Target, matindex& Locations ) {$/;"	f	class:HSmoothBase
-nSubTri	Triangulation.h	/^		trimesh Mesh, nSubTri;				\/\/ the Delaunay triangulation from which everything is derived$/;"	m	class:HSmoothTri::Triangulation
-nUnique	Triangulation.h	/^		std::vector< int > nUnique;$/;"	m	class:HSmoothTri::Triangulation
+nSubTri	Triangulation.h	/^			trimesh Mesh, nSubTri;				\/\/ the Delaunay triangulation from which everything is derived$/;"	m	class:HSmoothTri::Triangulation
+nUnique	Triangulation.h	/^			std::vector< int > nUnique;$/;"	m	class:HSmoothTri::Triangulation
 ncount	Triangulation.h	/^	int ncount;$/;"	m	struct:EdgeCount
 one	VolumeSolver.h	/^		matindex one, three;$/;"	m	class:VolumeSolver::VolumeSolver
 orig_pair	Triangulation.h	/^	EdgePair orig_pair;$/;"	m	struct:EdgeCount
