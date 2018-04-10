@@ -35,7 +35,8 @@
 #include <unordered_map>
 #include <vector>
 #include <tuple>
-#include <boost/functional/hash.hpp>	// for std::hash< std::pair, ... >
+#include <functional>
+//#include <boost/functional/hash.hpp>	// for std::hash< std::pair, ... >
 
 #include "Eigen/Eigen"
 #include "Eigen/Sparse"
@@ -111,7 +112,7 @@ typedef std::vector< EdgePair > EdgeList;
  */
 template< typename T >
 struct DictBase {
-	typedef std::unordered_map< EdgePair, T, boost::hash< EdgePair > > EdgeDict;
+	typedef std::unordered_map< EdgePair, T, std::hash< EdgePair > > EdgeDict;
 };
 /*
  * The dictionary initialization happens like this:
