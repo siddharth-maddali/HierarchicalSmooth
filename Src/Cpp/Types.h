@@ -36,11 +36,14 @@
 #include <vector>
 #include <tuple>
 #include <functional>
+#include <cstdlib>
 //#include <boost/functional/hash.hpp>	// for std::hash< std::pair, ... >
 
 #include "Eigen/Eigen"
 #include "Eigen/Sparse"
 #include "Eigen/IterativeLinearSolvers"
+
+#define _CIRC_		sizeof( std::size_t ) * 4
 
 // NOTE: 'int' is typedefed in iostream as unsigned long long, or something.
 
@@ -103,16 +106,32 @@ typedef std::pair< int, int > EdgePair;
 typedef std::vector< EdgePair > EdgeList;
 
 /*
- * Since EdgePair objects are going to be searched for a lot in the 
- * hierarchical smooth library, the following definition is for a 
- * dictionary that maps EdgePair objects to objects of the user's 
- * choice. This object uses Boost's in-built hash function for 
- * std::pair objects. The target object type is specified through 
- * a template parameter T.
+ * EdgePairEqual:
+ * Comparison function for two different EdgePairs, used in custom hash function.
+ */
+struct EdgePairEqual {
+	bool operator()( const EdgePair& lhs, const EdgePair& rhs ) const {
+		return ( lhs.first == rhs.first ) && ( lhs.second == rhs.second );
+	}
+};
+
+/*
+ * The actual hash function
+ */
+namespace std {
+	template<> struct hash< EdgePair > {
+		std::size_t operator()( const EdgePair& EP ) const { 
+			return std::hash< std::size_t >{}( (std::size_t)EP.first << _CIRC_ | (std::size_t)EP.second );
+		}
+	};
+}
+
+/*
+ * Customized dictionary that takes EdgePairs as keys.
  */
 template< typename T >
 struct DictBase {
-	typedef std::unordered_map< EdgePair, T, std::hash< EdgePair > > EdgeDict;
+	typedef std::unordered_map< EdgePair, T, std::hash< EdgePair >, EdgePairEqual > EdgeDict;
 };
 /*
  * The dictionary initialization happens like this:
