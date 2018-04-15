@@ -37,7 +37,6 @@
 #include <tuple>
 #include <functional>
 #include <cstdlib>
-//#include <boost/functional/hash.hpp>	// for std::hash< std::pair, ... >
 
 #include "Eigen/Eigen"
 #include "Eigen/Sparse"
