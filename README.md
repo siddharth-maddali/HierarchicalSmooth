@@ -6,11 +6,12 @@ Thie repo contains multiple implementations of the hierarchical smoothing algori
 
 ## Motivation
 1. Faithfulness to mesoscopically smooth interfaces
-1. Minimum user interference in deciding numerical parameters
-1. Automatability over an entire volume
-1. Proper treatment of GB interiors, triple lines and quad points
+1. Minimum user interference in deciding smoothing parameters
+1. Ability to automate over an entire polycrystal volume
+1. Proper treatment of topological features like grain boundary interiors, triple lines and quad points
 
-A detailed description of the mathematical theory is given [here](http://dx.doi.org/10.1016/j.commatsci.2016.08.021).
+## Reference
+ S. Maddali, S. Ta'asan, R. M. Suter, _Topology-faithful nonparametric estimation and tracking of bulk interface networks_, [** Computational Materials Science ** 125, 328-340 (2016)](http://dx.doi.org/10.1016/j.commatsci.2016.08.021).
 
 ## Software requirements
 
@@ -25,12 +26,16 @@ A detailed description of the mathematical theory is given [here](http://dx.doi.
 1. NumPy (>=1.11.2)
 1. SciPy (>=0.18.1)
 
-## Tutorials
- These tutorials does not cover the import and export of the required microstructure data relative to DREAM.3D. Included is a sample data set (in the `examples/ex2` directory) containing the mesh of a 794-grain microstructure volume. The following steps illustrate the form of the input and implementation of the central `HierarchicalSmooth` routine. In each tutorial, the working directory is assumed to be that which contains the corresponding source code.
- 
- [Matlab tutorial](#matlab-usage)
+### C++
+1. [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page) - a templated C++ library for linear algebra.
+1. [libIGL](http://libigl.github.io/libigl/) - a set of very useful algorithms and routines written using Eigen.
 
- [Python tutorial](#python-usage)
+## Tutorials
+ These tutorials do not cover the import and export of the required microstructure data relative to DREAM.3D. Included is a sample data set (in the `examples/ex2` directory) containing the mesh of a 794-grain microstructure volume. The following steps illustrate the form of the input and implementation of the central `HierarchicalSmooth` routine. In each tutorial, the working directory is assumed to be that which contains the corresponding source code.
+ 
+ - [Matlab tutorial](#matlab-usage)
+ - [Python tutorial](#python-usage)
+ - [C++ tutorial](#c++-usage)
 
 ### Matlab usage
 * The input array `xDat` contains a set of N points in 3D in the form of a 3xN array. These represent voxelated sample points of the GB network.
@@ -116,8 +121,25 @@ Note that this does not ignore the surfaces on the exterior of the volume.
 
 * There are optional arguments to `HierarchicalSmooth` that deal with the internal interval bisection threshold and the maximum number of iterations, as well as the text log file to which to redirect `sys.stdout` if needed.
 
+### C++ usage
+The C++ implementation of HierarchicalSmooth is by far the fastest and most efficient of the three available on this repo, and it is highly recommended that you use this instead of the much older and slightly buggy Matlab and Python code. It is built on top of Eigen, which is also the linear algebra package of choice for DREAM.3D. 
+
+This section describes how to build the compiled libraries and also how to generate wrappers that allow them to be used in Matlab and Octave. This has been tested for 64-bit Linux systems. The source code is found in the `Src/Cpp` directory and includes a simple hand-written Makefile to generate the shared and static libraries. The procedure for building the project is as follows:
+
+1. Download or link the Eigen and libIGL source codes into the working directory with the HierarchicalSmooth source code and Makefile, under the names `Eigen` and `libigl` respectively.
+2. Run the makefile from the command line: `make`. his should generate a static library `libhsmooth.a` and a shared (dynamically linked) library `libhsmooth.so`.
+3. If you are using Matlab, run the `CreateMatlabMex.m` script from the Matlab shell. This should generate a compiled binary `HierarchicalSmoothMatlab.mexa64` on 64-bit Linux machines. This function can be used in the same manner as the Matlab implementation of `HierarchicalSmooth` described above, except for the slightly different argument list:
+```Matlab
+xsmooth = HierarchicalSmoothMatlab( tri, xdat, fl, ntype );
+```
+and it will run enormously faster than the Matlab code.
+4. If you are using Octave, the procedure is very similar, except you should run the `CreateOctaveMex.m` script from the Octave shell. This should generate a binary  `HierarchicalSmoothOctave.mex` on 64-bit Linux machines. This is implemented in the same manner as the Matlab binary.
+```Octave
+xsmooth = HierarchicalSmoothOctave( tri, xdat, fl, ntype );
+```
 ## Acknowledgements
 1. Anthony Rollett (Dept of MSE, CMU)
-2. David Menasche (Dept of Physics, CMU)
+1. David Menasche (Dept of Physics, CMU)
+1. Michael Jackson (Bluequartz Software)
 
 
