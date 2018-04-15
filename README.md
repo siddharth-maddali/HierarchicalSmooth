@@ -1,5 +1,5 @@
 # Hierarchical Smoothing
-![alt tag](https://github.com/siddharth-mv/HierarchicalSmooth/blob/master/Banner.png?raw=true "Triple line fidelity with hierarchical smoothing")
+![alt tag](https://github.com/siddharth-mv/HierarchicalSmooth/blob/master/Banner.png?raw=true "Demonstration of triple line fidelity with hierarchical smoothing")
 
 ## Description
 Thie repo contains multiple implementations of the hierarchical smoothing algorithm applicable to voxelated meshes of interface networks. Primarily directed at users of microstructure analysis software, specifically [DREAM.3D](http://dream3d.bluequartz.net/). 
@@ -11,7 +11,7 @@ Thie repo contains multiple implementations of the hierarchical smoothing algori
 1. Proper treatment of topological features like grain boundary interiors, triple lines and quad points
 
 ## Reference
- S. Maddali, S. Ta'asan, R. M. Suter, _Topology-faithful nonparametric estimation and tracking of bulk interface networks_, [** Computational Materials Science ** 125, 328-340 (2016)](http://dx.doi.org/10.1016/j.commatsci.2016.08.021).
+ S. Maddali, S. Ta'asan, R. M. Suter, _Topology-faithful nonparametric estimation and tracking of bulk interface networks_, [**Computational Materials Science** 125, 328-340 (2016)](http://dx.doi.org/10.1016/j.commatsci.2016.08.021).
 
 ## Software requirements
 
