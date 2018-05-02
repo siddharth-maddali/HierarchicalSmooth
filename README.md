@@ -1,6 +1,6 @@
 # Hierarchical Smoothing
 ![alt tag](https://github.com/siddharth-mv/HierarchicalSmooth/blob/master/Banner.png?raw=true "Demonstration of triple line fidelity with hierarchical smoothing")
-<img src="smoothedGBN.gif" width="400" height="790">
+<img src="smoothedGBN.gif" width="1003" height="489">
 
 ## Description
 Thie repo contains multiple implementations of the hierarchical smoothing algorithm applicable to voxelated meshes of interface networks. Primarily directed at users of microstructure analysis software, specifically [DREAM.3D](http://dream3d.bluequartz.net/). 
