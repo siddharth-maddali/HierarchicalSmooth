@@ -30,10 +30,11 @@ OBJS = $(patsubst %.cpp, %.o, $(CPPS))
 INCL = -I. -I$(MYLIB_PATH) -I$(EIGEN_PATH) -I$(IGL_PATH) #-I$(BOOST_PATH)
 
 PRIMARY_FLAGS=-Wno-deprecated-declarations 
+OTHER_FLAGS=-Wno-ignored-attributes
 OPTIMIZER_FLAGS= -O3 -std=c++11 -fPIC
 MY_LIBS=
 DEBUG_FLAGS=
-CFLAGS= ${PRIMARY_FLAGS} ${DEBUG_FLAGS} ${OPTIMIZER_FLAGS}
+CFLAGS= ${PRIMARY_FLAGS} ${DEBUG_FLAGS} ${OTHER_FLAGS} ${OPTIMIZER_FLAGS}
 
 CC= /usr/bin/g++
 AR= /usr/bin/ar
