@@ -126,12 +126,18 @@ The C++ implementation of HierarchicalSmooth is by far the fastest and most effi
 
 This section describes how to build the compiled libraries and also how to generate wrappers that allow them to be used in Matlab and Octave. This has been tested for 64-bit Linux systems. The source code is found in the `Src/Cpp` directory and includes a simple hand-written Makefile to generate the shared and static libraries. The procedure for building the project is as follows:
 
-1. Download or link the Eigen and libIGL source codes into the working directory with the HierarchicalSmooth source code and Makefile, under the names `Eigen` and `libigl` respectively.
-2. Run the makefile from the command line: `make`. his should generate a static library `libhsmooth.a` and a shared (dynamically linked) library `libhsmooth.so`.
-3. If you are using Matlab, run the `CreateMatlabMex.m` script from the Matlab shell. This should generate a compiled binary `HierarchicalSmoothMatlab.mexa64` on 64-bit Linux machines. This function can be used in the same manner as the Matlab implementation of `HierarchicalSmooth` described above, except for the slightly different argument list:
+* Download or link the Eigen and libIGL source codes into the working directory with the HierarchicalSmooth source code and Makefile, under the names `Eigen` and `libigl` respectively.
+* Run the makefile from the command line: `make`. his should generate a static library `libhsmooth.a` and a shared (dynamically linked) library `libhsmooth.so`.
+* If you are using Matlab, run the `CreateMatlabMex.m` script from the Matlab shell. This should generate a compiled binary `HierarchicalSmoothMatlab.mexa64` on 64-bit Linux machines. This function can be used in the same manner as the Matlab implementation of `HierarchicalSmooth` described above, except for the slightly different argument list:
 ```Matlab
 xsmooth = HierarchicalSmoothMatlab( tri, xdat, fl, ntype );
 ```
+	* Don't forget to remove the buffer mesh elements on the faces of the box before hand:
+	```Matlab
+	f = find( any( fl > 0, 2 ) );
+	tri = tri( f, : );
+	fl = fl( f, : );
+	```
 and it will run enormously faster than the Matlab code.
 4. If you are using Octave, the procedure is very similar, except you should run the `CreateOctaveMex.m` script from the Octave shell. This should generate a binary  `HierarchicalSmoothOctave.mex` on 64-bit Linux machines. This is implemented in the same manner as the Matlab binary.
 ```Octave
