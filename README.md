@@ -35,7 +35,7 @@ Thie repo contains multiple implementations of the hierarchical smoothing algori
  
  - [Matlab tutorial](#matlab-usage)
  - [Python tutorial](#python-usage)
- - [C++ tutorial](#c++-usage)
+ - [C++ tutorial](#c-usage)
 
 ### Matlab usage
 * The input array `xDat` contains a set of N points in 3D in the form of a 3xN array. These represent voxelated sample points of the GB network.
