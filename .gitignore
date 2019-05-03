@@ -3,6 +3,7 @@ Src/Cpp/libigl
 Src/Cpp/TestSuite
 Src/Cpp/boost
 Src/Cpp/test.m
+Src/Cpp/makeMovie.m
 Untracked
 *.pdf	
 *.mex*
