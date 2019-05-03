@@ -33,9 +33,9 @@ Thie repo contains multiple implementations of the hierarchical smoothing algori
 ## Tutorials
  These tutorials do not cover the import and export of the required microstructure data relative to DREAM.3D. Included is a sample data set (in the `examples/ex2` directory) containing the mesh of a 794-grain microstructure volume. The following steps illustrate the form of the input and implementation of the central `HierarchicalSmooth` routine. In each tutorial, the working directory is assumed to be that which contains the corresponding source code.
  
- - <a href src="#matlabusage">Matlab tutorial</a>
- - <a href src="#pythonusage">Python tutorial</a>
- - <a href src="#cppusage">C++ tutorial</a>
+ - <a href="#matlabusage">Matlab tutorial</a>
+ - <a href="#pythonusage">Python tutorial</a>
+ - <a href="#cppusage">C++ tutorial</a>
 
 <a name="#matlabusage"></a>
 ### Matlab usage
