@@ -35,8 +35,9 @@ Thie repo contains multiple implementations of the hierarchical smoothing algori
  
  - [Matlab tutorial](#matlab-usage)
  - [Python tutorial](#python-usage)
- - [C++ tutorial](#c++-usage)
+ - [C++ tutorial](#cpp-usage)
 
+<a name="#matlab-usage"></a>
 ### Matlab usage
 * The input array `xDat` contains a set of N points in 3D in the form of a 3xN array. These represent voxelated sample points of the GB network.
 ```Matlab
@@ -72,6 +73,7 @@ xsmooth = HierarchicalSmooth( xdat, tri, fl, ntype );
 ```
 Optional arguments for `HierarchicalSmooth` are described in the script file. Finally, the script `Test.m` plots a comparison between the smoothed and unsmoothed versions of a grain of the user's choice. 
 
+<a name="#python-usage"></a>
 ### Python usage
 The Python functions were written to mirror the corresponding functions in the Matlab source code as much as possible. Specifically, the primary function `HierarchicalSmooth` and its auxiliary functions are written in a file `HierarchicalSmooth.py` which is loaded as a module. A bare-bones version of Matlab's indispensible `ismember` function is implemented in `Base.py`. Further, the basic functionality of Matlab's `triangulation` object is implemented in `Triangulation.py`. The following steps are the essence of the test script `Src/Python/TestSuite/SmoothVolume.py`. 
 
@@ -121,6 +123,7 @@ Note that this does not ignore the surfaces on the exterior of the volume.
 
 * There are optional arguments to `HierarchicalSmooth` that deal with the internal interval bisection threshold and the maximum number of iterations, as well as the text log file to which to redirect `sys.stdout` if needed.
 
+<a name="#cpp-usage"></a>
 ### C++ usage
 The C++ implementation of HierarchicalSmooth is by far the fastest and most efficient of the three available on this repo, and it is highly recommended that you use this instead of the much older and slightly buggy Matlab and Python code. It is built on top of Eigen, which is also the linear algebra package of choice for DREAM.3D. 
 
