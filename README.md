@@ -132,13 +132,13 @@ This section describes how to build the compiled libraries and also how to gener
 ```Matlab
 xsmooth = HierarchicalSmoothMatlab( tri, xdat, fl, ntype );
 ```
-	* Don't forget to remove the buffer mesh elements on the faces of the box before hand:
-	```Matlab
-	f = find( any( fl > 0, 2 ) );
-	tri = tri( f, : );
-	fl = fl( f, : );
-	```
-and it will run enormously faster than the Matlab code.
+* Don't forget to remove the buffer mesh elements on the faces of the box before hand:
+```Matlab
+f = find( any( fl > 0, 2 ) );
+tri = tri( f, : );
+fl = fl( f, : );
+```
+... and it will run enormously faster than the Matlab code.
 4. If you are using Octave, the procedure is very similar, except you should run the `CreateOctaveMex.m` script from the Octave shell. This should generate a binary  `HierarchicalSmoothOctave.mex` on 64-bit Linux machines. This is implemented in the same manner as the Matlab binary.
 ```Octave
 xsmooth = HierarchicalSmoothOctave( tri, xdat, fl, ntype );
