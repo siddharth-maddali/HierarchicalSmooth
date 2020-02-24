@@ -139,7 +139,8 @@ tri = tri( f, : );
 fl = fl( f, : );
 ```
 ... and it will run enormously faster than the Matlab code.
-4. If you are using Octave, the procedure is very similar, except you should run the `CreateOctaveMex.m` script from the Octave shell. This should generate a binary  `HierarchicalSmoothOctave.mex` on 64-bit Linux machines. This is implemented in the same manner as the Matlab binary.
+
+* If you are using Octave, the procedure is very similar, except you should run the `CreateOctaveMex.m` script from the Octave shell. This should generate a binary  `HierarchicalSmoothOctave.mex` on 64-bit Linux machines. This is implemented in the same manner as the Matlab binary.
 ```Octave
 xsmooth = HierarchicalSmoothOctave( tri, xdat, fl, ntype );
 ```
