@@ -1,4 +1,6 @@
 # Hierarchical Smoothing
+
+![alt tag](https://github.com/siddharth-mv/HierarchicalSmooth/blob/master/smoothedGBN.gif "Unsmoothed vs smoothed")
 ![alt tag](https://github.com/siddharth-mv/HierarchicalSmooth/blob/master/Banner.png?raw=true "Demonstration of triple line fidelity with hierarchical smoothing")
 
 ## Description
