@@ -4,7 +4,16 @@
 ![alt tag](https://github.com/siddharth-mv/HierarchicalSmooth/blob/master/Banner.png?raw=true "Demonstration of triple line fidelity with hierarchical smoothing")
 
 ## Description
-Thie repo contains multiple implementations of the hierarchical smoothing algorithm applicable to voxelated meshes of interface networks. Primarily directed at users of microstructure analysis software, specifically [DREAM.3D](http://dream3d.bluequartz.net/). 
+Thie repo contains multiple implementations of the hierarchical smoothing algorithm applicable to voxelated meshes of interface networks. 
+Primarily directed at users of microstructure analysis software, specifically [DREAM.3D](http://dream3d.bluequartz.net/). 
+
+### WARNING
+It is strongly recommended to compile the [C++ version](#c-usage) and call it in a Matlab/Octave routine (wrappers are available with the code). 
+The Python and Matlab source codes are basically prototyped versions, and haven't been updated in years.
+They are definitely slow, not at all optimized and possibly buggy.
+What Python and Matlab do in a few hours for a large, high-resolution microstructure, C++ can do in a few seconds.
+I can help with the compilation on a Linux machine; please go through previous issues or open a new one if you run into trouble.
+
 
 ## Motivation
 1. Faithfulness to mesoscopically smooth interfaces
