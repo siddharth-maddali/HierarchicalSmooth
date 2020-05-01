@@ -21,7 +21,7 @@ I can help with the compilation on a Linux machine; please go through previous i
 1. Ability to automate over an entire polycrystal volume
 1. Proper treatment of topological features like grain boundary interiors, triple lines and quad points
 
-## Reference
+## Reference (citations are greatly appreciated!)
  S. Maddali, S. Ta'asan, R. M. Suter, _Topology-faithful nonparametric estimation and tracking of bulk interface networks_, [**Computational Materials Science** 125, 328-340 (2016)](http://dx.doi.org/10.1016/j.commatsci.2016.08.021).
 
 ## Software requirements
@@ -155,9 +155,19 @@ fl = fl( f, : );
 ```Octave
 xsmooth = HierarchicalSmoothOctave( tri, xdat, fl, ntype );
 ```
+
+* The array dimensions expected by the Matlab/Octave code are:
+	- `tri`: $N \times 3$
+	- `xdat`: $3 \times N$
+	- `fl`: $N \times 2$
+	- `ntype`: $N \times 1$
+
+  Failing this Eigen _will_ complain, and you might experience a Matlab/Octave crash, because currently there is no mechanism to handle Eigen errors.
+  A good way to deal with this is to call the compiled MEX binary inside a custom Matlab/Octave function, within which all the necessary error handling may be done.
+
 ## Acknowledgements
-1. Anthony Rollett (Dept of MSE, CMU)
-1. David Menasche (Dept of Physics, CMU)
+1. Anthony Rollett (Dept of Materials Science and Engineering, Carnegie Mellon University)
+1. David Menasche (Dept of Physics, Carnegie Mellon University)
 1. Michael Jackson (Bluequartz Software)
 
 
