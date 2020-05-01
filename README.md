@@ -157,10 +157,10 @@ xsmooth = HierarchicalSmoothOctave( tri, xdat, fl, ntype );
 ```
 
 * The array dimensions expected by the Matlab/Octave code are:
-	- `tri`: $N \times 3$
-	- `xdat`: $3 \times N$
-	- `fl`: $N \times 2$
-	- `ntype`: $N \times 1$
+	- `tri`: N ⨉ 3
+	- `xdat`: 3 ⨉ N
+	- `fl`: N ⨉ 2
+	- `ntype`: N ⨉ 1
 
   Failing this Eigen _will_ complain, and you might experience a Matlab/Octave crash, because currently there is no mechanism to handle Eigen errors.
   A good way to deal with this is to call the compiled MEX binary inside a custom Matlab/Octave function, within which all the necessary error handling may be done.
